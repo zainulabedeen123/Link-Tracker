@@ -1,7 +1,9 @@
 import { CreateLinkRequest, CreateLinkResponse, Link, Click } from '../types/database';
 
 // API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || (
+  import.meta.env.PROD ? '/api' : 'http://localhost:3001/api'
+);
 
 // Get user ID from Clerk (you'll need to pass this from components)
 let currentUserId: string | null = null;
@@ -14,35 +16,67 @@ export const setCurrentUserId = (userId: string) => {
 const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
 
+  console.log('API Request:', { url, method: options.method || 'GET', currentUserId });
+
   const defaultHeaders = {
     'Content-Type': 'application/json',
     ...(currentUserId && { 'x-user-id': currentUserId })
   };
 
-  const response = await fetch(url, {
-    ...options,
-    headers: {
-      ...defaultHeaders,
-      ...options.headers
+  try {
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        ...defaultHeaders,
+        ...options.headers
+      }
+    });
+
+    console.log('API Response status:', response.status);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('API Error response:', errorText);
+
+      let errorData;
+      try {
+        errorData = JSON.parse(errorText);
+      } catch {
+        errorData = { error: `HTTP ${response.status}: ${errorText}` };
+      }
+
+      throw new Error(errorData.error || `HTTP ${response.status}`);
     }
-  });
 
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({ error: 'Network error' }));
-    throw new Error(error.error || `HTTP ${response.status}`);
+    const data = await response.json();
+    console.log('API Response data:', data);
+    return data;
+  } catch (error) {
+    console.error('API Request failed:', error);
+    throw error;
   }
-
-  return response.json();
 };
 
 // API Functions
 export const createLink = async (request: CreateLinkRequest, userId: string): Promise<CreateLinkResponse> => {
   try {
     setCurrentUserId(userId);
-    return await apiRequest('/links', {
+    const response = await apiRequest('/links', {
       method: 'POST',
       body: JSON.stringify(request)
     });
+
+    // Convert date strings to Date objects if link is returned
+    if (response.success && response.link) {
+      response.link = {
+        ...response.link,
+        createdAt: new Date(response.link.createdAt),
+        updatedAt: new Date(response.link.updatedAt),
+        expiresAt: response.link.expiresAt ? new Date(response.link.expiresAt) : undefined
+      };
+    }
+
+    return response;
   } catch (error) {
     return {
       success: false,
@@ -66,7 +100,16 @@ export const getUserLinks = async (userId: string): Promise<Link[]> => {
   try {
     setCurrentUserId(userId);
     const response = await apiRequest('/links');
-    return response.links || [];
+
+    // Convert date strings to Date objects
+    const links = (response.links || []).map((link: any) => ({
+      ...link,
+      createdAt: new Date(link.createdAt),
+      updatedAt: new Date(link.updatedAt),
+      expiresAt: link.expiresAt ? new Date(link.expiresAt) : undefined
+    }));
+
+    return links;
   } catch (error) {
     console.error('Error fetching user links:', error);
     return [];

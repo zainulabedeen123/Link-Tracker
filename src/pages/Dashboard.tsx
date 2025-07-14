@@ -25,13 +25,18 @@ const Dashboard: React.FC = () => {
     const loadLinks = async () => {
       if (user?.id) {
         try {
+          console.log('Loading links for user:', user.id);
           const userLinks = await getUserLinks(user.id);
+          console.log('Loaded links:', userLinks);
           setLinks(userLinks);
         } catch (error) {
           console.error('Error loading links:', error);
+          error('Failed to load links');
         } finally {
           setLoadingLinks(false);
         }
+      } else {
+        setLoadingLinks(false);
       }
     };
 
@@ -84,7 +89,9 @@ const Dashboard: React.FC = () => {
         title: title || undefined
       };
 
+      console.log('Creating link with request:', request);
       const response = await createLink(request, user.id);
+      console.log('Create link response:', response);
 
       if (response.success && response.link) {
         setLinks(prev => [response.link!, ...prev]);
@@ -96,6 +103,7 @@ const Dashboard: React.FC = () => {
         setCustomAlias('');
         setTitle('');
       } else {
+        console.error('Create link failed:', response.error);
         error(response.error || 'Failed to create link');
       }
 
