@@ -81,40 +81,40 @@ export const Testimonials: React.FC = () => {
 
   const testimonials = [
     {
-      quote: "AI Finance has transformed the way I manage my finances. The personalized insights and automated features have saved me so much time and effort.",
-      name: "Sarah White",
-      role: "Software Engineer",
-      avatar: "https://cdn.builder.io/api/v1/image/assets/9de6021644f9415b8e6ba1d1ef4607ce/e6bea8c89909d9da1dec8e771f74bcc976273dbb?placeholderIfAbsent=true"
+      quote: "Very nice product, was our favorite among several we tried. The developer/owner of Linkly is very responsive and developed helpful features quickly, following our request. Very cool.",
+      name: "Robert W.",
+      role: "Marketing Director",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
     },
     {
-      quote: "Thanks to AI Finance, I feel more confident in my investment decisions. The real-time analysis and predictive analytics are game-changers.",
-      name: "Sarah White",
-      role: "Software Engineer",
-      avatar: "https://cdn.builder.io/api/v1/image/assets/9de6021644f9415b8e6ba1d1ef4607ce/e3aaae633e2b535f255052bf39a89302bf6e58c1?placeholderIfAbsent=true"
+      quote: "We were looking for a tool that allowed us to track link clicks from across many different sources to a 3rd party site we didn't have access to and pixel all of them centrally. Linkly is a clean, easy way of doing that quickly and cheaply.",
+      name: "Jamie P.",
+      role: "Digital Marketer",
+      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face"
     },
     {
-      quote: "AI Finance has completely transformed my financial management. The personalized insights and automated features save me so much time.",
-      name: "Sarah White",
-      role: "Software Engineer",
-      avatar: "https://cdn.builder.io/api/v1/image/assets/9de6021644f9415b8e6ba1d1ef4607ce/aa2b1aa0f5d8bc9e9aada43cbd1e648ee01ab047?placeholderIfAbsent=true"
+      quote: "Easily create shortened URLs which showcase your branding. Very easy to use - great customer help - clear data.",
+      name: "Aleksandra R.",
+      role: "Brand Manager",
+      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face"
     },
     {
-      quote: "Thanks to AI Finance, I feel more confident in my investment decisions. The real-time analysis and predictive analytics are game-changers.",
-      name: "Sarah White",
-      role: "Software Engineer",
-      avatar: "https://cdn.builder.io/api/v1/image/assets/9de6021644f9415b8e6ba1d1ef4607ce/5e23029fb9a7dda3c2411547ec09fff93eedf2ca?placeholderIfAbsent=true"
+      quote: "Good features, relatively easy to use and got great results. Love the geo targeting feature whereby it auto detects user's location and redirects to appropriate local URL.",
+      name: "Niall H.",
+      role: "Growth Hacker",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
     },
     {
-      quote: "The fraud detection feature gives me peace of mind, knowing my financial in my investment decisions data is secure and protected.",
-      name: "Sarah White",
-      role: "Software Engineer",
-      avatar: "https://cdn.builder.io/api/v1/image/assets/9de6021644f9415b8e6ba1d1ef4607ce/82f5d04423f994a92ae42c2ca2201f7655634006?placeholderIfAbsent=true"
+      quote: "Also happy with the mailto link shortening which isn't offered by most link shorteners. This software is remarkably easy to use and would be a great choice for any marketer.",
+      name: "Sagar J.",
+      role: "Email Marketer",
+      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face"
     },
     {
-      quote: "AI Finance's budgeting tools have helped me stay on track with my financial goals. The AI adapts to my changing financial situation effortlessly.",
-      name: "Sarah White",
-      role: "Software Engineer",
-      avatar: "https://cdn.builder.io/api/v1/image/assets/9de6021644f9415b8e6ba1d1ef4607ce/b374f42ab25e2b15401f35e18dd64e7d003e91eb?placeholderIfAbsent=true"
+      quote: "This software is remarkably easy to use and would be a great choice for any marketer who wants to be able to track link metrics without losing brand integrity.",
+      name: "Shanda E.",
+      role: "Content Strategist",
+      avatar: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=150&h=150&fit=crop&crop=face"
     }
   ];
 
@@ -127,16 +127,15 @@ export const Testimonials: React.FC = () => {
       variants={containerVariants}
     >
       <div className="flex flex-col items-stretch">
-        <motion.header 
+        <motion.header
           className="flex w-full max-w-[911px] mx-auto flex-col items-center text-center"
           variants={headerVariants}
         >
-          <h2 className="text-white text-6xl font-medium leading-[1.2] tracking-[-1.5px] max-md:text-[32px] max-md:leading-[40px] max-md:tracking-[-1px]">
-            Real Experiences from Our Users
+          <h2 className="text-white text-5xl font-bold leading-[1.2] tracking-[-1.5px] max-md:text-[32px] max-md:leading-[40px] max-md:tracking-[-1px]">
+            What people say about Linkly
           </h2>
           <p className="text-[#AAA] text-lg font-normal leading-[31px] opacity-80 w-full max-w-[633px] mt-6 max-md:text-base max-md:leading-[24px]">
-            Discover the power of AI-driven financial solutions for smarter,
-            faster, and more secure financial decision-making
+            You're in good company. Thousands of businesses use Linkly to create tracking links, retarget visitors, make QR codes and more.
           </p>
         </motion.header>
         <div className="w-full text-base mt-20 max-md:mt-10">

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, Sliders, Users, Settings, Settings2 } from 'lucide-react';
+import { BarChart3, Globe, Target, QrCode, Smartphone, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
 interface SpecialFeatureCardProps {
   title: string;
@@ -67,21 +67,21 @@ export const SpecialFeatures: React.FC = () => {
   };
 
   const features = [{
-    title: "Create Inspiring Melodies",
-    description: "With the AI Melody Generator, you can generate unique and captivating melodies based on your style.",
-    icon: <Settings className="w-10 h-10" style={{
+    title: "Smart Link Analytics",
+    description: "Get detailed insights into your link performance with real-time analytics, geographic data, and device breakdowns.",
+    icon: <BarChart3 className="w-10 h-10" style={{
       stroke: 'url(#icon-gradient)'
     }} />
   }, {
-    title: "Automated Mixing Mastering",
-    description: "With the AI Melody Generator, you can generate unique and captivating melodies based on your style.",
-    icon: <Settings2 style={{
+    title: "Global Redirects",
+    description: "Automatically redirect users to different destinations based on their location, device, or other criteria.",
+    icon: <Globe style={{
       stroke: 'url(#icon-gradient)'
-    }} className="w-10 max-h-8" />
+    }} className="w-10 h-10" />
   }, {
-    title: "Real-Time Collaboration",
-    description: "With the AI Melody Generator, you can generate unique and captivating melodies based on your style.",
-    icon: <Settings className="w-10 h-10" style={{
+    title: "Branded Short Links",
+    description: "Create professional short links with your own custom domain to maintain brand consistency.",
+    icon: <Target className="w-10 h-10" style={{
       stroke: 'url(#icon-gradient)'
     }} />
   }];
@@ -101,14 +101,13 @@ export const SpecialFeatures: React.FC = () => {
       </svg>
       
       <motion.header className="flex w-full max-w-[911px] mx-auto flex-col items-center text-center" variants={headerVariants}>
-        <h2 className="text-white text-6xl font-medium leading-[72px] tracking-[-1.5px] max-md:text-[32px] max-md:leading-[40px] max-md:tracking-[-1px]">
-          Special Features of Our
+        <h2 className="text-white text-5xl font-bold leading-[60px] tracking-[-1.5px] max-md:text-[32px] max-md:leading-[40px] max-md:tracking-[-1px]">
+          Powerful Features for
           <br />
-          AI Image Editor
+          Link Management
         </h2>
         <p className="text-[#AAA] text-lg font-normal leading-[31px] opacity-80 w-full max-w-[633px] mt-6 max-md:text-base max-md:leading-[24px]">
-          Discover the future of image production with InnovaAI.
-          Effortlessly create, edit, and perfect your tracks.
+          Everything you need to create, track, and optimize your links for maximum performance and insights.
         </p>
       </motion.header>
       <motion.div className="flex w-full items-center gap-6 flex-wrap justify-center mt-20 max-md:mt-10 max-md:flex-col max-md:gap-4" variants={containerVariants}>

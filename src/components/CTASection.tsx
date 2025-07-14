@@ -1,34 +1,45 @@
 
 import React from 'react';
+import { SignedIn, SignedOut, SignInButton } from '@clerk/clerk-react';
+import { useNavigate } from 'react-router-dom';
 
 export const CTASection: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
-    <section className="border-[color:var(--stroke-15-card,rgba(255,255,255,0.40))] shadow-[2px_4px_16px_0px_rgba(248,248,248,0.06)_inset] backdrop-blur-[50px] bg-[rgba(116,116,116,0.07)] w-full max-w-[1200px] overflow-hidden mt-[134px] mx-4 rounded-[32px] border-[1.5px] border-solid max-md:mt-10 max-md:mx-2">
-      <div className="gap-5 flex max-md:flex-col max-md:items-stretch">
-        <div className="w-6/12 max-md:w-full max-md:ml-0">
-          <div className="self-stretch my-auto px-[60px] py-8 max-md:px-6 max-md:py-6 max-md:mt-10">
-            <div className="w-full">
-              <h2 className="text-white text-5xl font-medium leading-[58px] tracking-[-1.5px] max-md:text-[28px] max-md:leading-[36px] max-md:tracking-[-1px]">
-                Unlock Your Image Editing Potential with AI
-              </h2>
-              <p className="text-[#f8f8f8] text-base font-normal leading-[1.7] opacity-80 mt-4 max-md:text-sm max-md:leading-[22px]">
-                Start Your Journey with and Revolutionize Your Creative
-                Process
-              </p>
-            </div>
-            <div className="w-full max-w-[182px] text-base text-white font-bold leading-[1.7] mt-10 rounded-[100px] max-md:mt-6">
-              <button className="text-white w-full border-[color:var(--Linear,#FF5552)] shadow-[0px_0px_8px_0px_rgba(248,248,248,0.25)_inset,0px_32px_24px_-16px_rgba(0,0,0,0.40)] backdrop-blur-[6px] min-h-[58px] gap-3 overflow-hidden px-7 py-4 rounded-[100px] border-[1.5px] border-solid max-md:px-5 max-md:min-h-[50px] max-md:text-sm hover:bg-[rgba(33,33,43,0.80)] transition-colors">
-                Book a Demo
-              </button>
-            </div>
+    <section className="w-full max-w-[1200px] mt-32 px-4 max-md:mt-20 max-md:px-2">
+      <div className="bg-gradient-to-br from-blue-900/50 to-purple-900/50 rounded-2xl border border-gray-700 p-16 text-center max-md:p-8">
+        <div className="max-w-3xl mx-auto">
+          <div className="bg-blue-600/20 text-blue-400 px-4 py-2 rounded-full text-sm font-medium mb-6 inline-block">
+            Track 1000 monthly clicks with all features included
           </div>
-        </div>
-        <div className="w-6/12 max-md:w-full max-md:ml-0">
-          <img
-            src="https://cdn.builder.io/api/v1/image/assets/9de6021644f9415b8e6ba1d1ef4607ce/d161b852c3d5e5e0986ff12ae5863ac088519d5d?placeholderIfAbsent=true"
-            className="aspect-[1.31] object-contain w-full grow max-md:max-w-full max-md:h-auto"
-            alt="AI Finance Platform Demo"
-          />
+
+          <h2 className="text-white text-5xl font-bold leading-[58px] tracking-[-1.5px] mb-6 max-md:text-[32px] max-md:leading-[40px] max-md:tracking-[-1px]">
+            Ready to Start Tracking Your Links?
+          </h2>
+
+          <p className="text-gray-300 text-xl leading-relaxed mb-8 max-md:text-lg">
+            Join thousands of businesses using Linkly to create tracking links, retarget visitors, and optimize their marketing campaigns.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-colors min-w-[200px]">
+                  Get Started for Free
+                </button>
+              </SignInButton>
+              <p className="text-gray-400 text-sm">No credit card required</p>
+            </SignedOut>
+            <SignedIn>
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-colors min-w-[200px]"
+              >
+                Start Creating Links
+              </button>
+            </SignedIn>
+          </div>
         </div>
       </div>
     </section>

@@ -114,18 +114,20 @@
 }
 
 .animate-marquee {
-  animation: marquee 20s linear infinite;
-  width: calc(167px * 12 + 6px * 11); /* 12 logos + 11 gaps */
+  animation: marquee 30s linear infinite;
+  width: fit-content;
+  display: flex;
+  gap: 3rem;
 }
 
 @media (max-width: 768px) {
   .animate-marquee {
-    width: calc(120px * 12 + 6px * 11);
+    gap: 2rem;
   }
 }
 
 @media (max-width: 640px) {
   .animate-marquee {
-    width: calc(100px * 12 + 6px * 11);
+    gap: 1.5rem;
   }
 }

@@ -49,30 +49,30 @@ const PricingPlan: React.FC<PricingPlanProps> = ({
 };
 export const PricingSection: React.FC = () => {
   const plans = [{
-    title: "Basic",
-    subtitle: "For individuals",
-    price: "29",
-    features: ["Comprehensive Dashboard", "Basic Budgeting Tools", "Monthly Financial Reports", "3 Financial Accounts", "Email Support"]
+    title: "Free",
+    subtitle: "Perfect for getting started",
+    price: "0",
+    features: ["1,000 monthly clicks", "Basic link analytics", "Custom short links", "QR code generation", "Email support"]
   }, {
-    title: "Premium",
+    title: "Pro",
     subtitle: "For growing businesses",
-    price: "59",
-    features: ["Everything in Basic", "Advanced Analytics", "Real-time Market Data", "Investment Tracking", "Priority Support"],
+    price: "19",
+    features: ["10,000 monthly clicks", "Advanced analytics", "Custom domains", "Geo-targeting", "Device targeting", "Priority support"],
     isPopular: true
   }, {
-    title: "Enterprise",
+    title: "Business",
     subtitle: "For large organizations",
-    price: "99",
-    features: ["Everything in Premium", "Custom Integrations", "Dedicated Account Manager", "Advanced Security", "24/7 Phone Support"]
+    price: "49",
+    features: ["100,000 monthly clicks", "Team collaboration", "API access", "White-label solution", "Advanced integrations", "24/7 phone support"]
   }];
-  return <section className="w-full max-w-[1200px] mt-[134px] px-4 max-md:mt-10 max-md:px-2">
+  return <section id="pricing" className="w-full max-w-[1200px] mt-[134px] px-4 max-md:mt-10 max-md:px-2">
       <div className="flex flex-col justify-start items-start gap-20">
         <div className="self-stretch flex flex-col justify-start items-center gap-6">
-          <div className="self-stretch text-center text-white text-6xl font-medium leading-[72px] tracking-[-1.5px] max-md:text-[32px] max-md:leading-[40px] max-md:tracking-[-1px]">
-            Tailored Solutions for<br />Every Need
+          <div className="self-stretch text-center text-white text-5xl font-bold leading-[60px] tracking-[-1.5px] max-md:text-[32px] max-md:leading-[40px] max-md:tracking-[-1px]">
+            Simple, Transparent Pricing
           </div>
           <div className="w-full max-w-[633px] opacity-80 text-center text-[#AAA] text-lg font-normal leading-[30.6px] max-md:text-base max-md:leading-[24px]">
-            Discover the power of AI-driven financial solutions for smarter, faster, and more secure financial decision-making
+            Choose the perfect plan for your link tracking needs. Start free and upgrade as you grow.
           </div>
         </div>
         <div className="self-stretch flex justify-start items-center gap-6 max-md:flex-col max-md:gap-4">
