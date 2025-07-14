@@ -36,13 +36,13 @@ VITE_CLERK_PUBLISHABLE_KEY=pk_test_Y3V0ZS10dXJ0bGUtMjYuY2xlcmsuYWNjb3VudHMuZGV2J
 ### 3. Nixpacks Configuration
 The project includes:
 - `nixpacks.toml` - Nixpacks build configuration
-- `server.js` - Express server for production
+- `server.js` - Native Node.js HTTP server (no dependencies)
 - Automatic Node.js 18 detection
 
 ### 4. Build Process (Nixpacks)
 1. Install dependencies with `npm ci`
 2. Build React app with `npm run build`
-3. Serve with Express server on $PORT
+3. Serve with native Node.js HTTP server on $PORT
 
 ### 5. Features Included
 - ✅ Gzip compression
