@@ -2,7 +2,6 @@ import React from 'react';
 import { Smartphone, Monitor, Tablet, Laptop } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Progress } from '../ui/progress';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
 interface DeviceChartProps {
   data: Record<string, number>;
@@ -30,14 +29,6 @@ const DeviceChart: React.FC<DeviceChartProps> = ({ data, totalClicks }) => {
     'Tablet': '#8b5cf6',
     'Laptop': '#f97316',
   };
-
-  // Prepare data for pie chart
-  const pieData = sortedDevices.map(([device, clicks]) => ({
-    name: device,
-    value: clicks,
-    percentage: ((clicks / totalClicks) * 100).toFixed(1),
-    color: pieColors[device] || '#6b7280'
-  }));
 
   const sortedDevices = Object.entries(data)
     .sort(([, a], [, b]) => b - a);
@@ -79,51 +70,58 @@ const DeviceChart: React.FC<DeviceChartProps> = ({ data, totalClicks }) => {
         })}
       </div>
 
-      {/* Donut Chart Visualization */}
+      {/* Simple Donut Chart Visualization */}
       <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
         <h4 className="text-lg font-semibold mb-6 text-center text-white">Device Distribution</h4>
 
-        <div className="h-64 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={pieData}
-                cx="50%"
-                cy="50%"
-                innerRadius={60}
-                outerRadius={100}
-                paddingAngle={2}
-                dataKey="value"
-              >
-                {pieData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: '#1f2937',
-                  border: '1px solid #374151',
-                  borderRadius: '8px',
-                  color: '#ffffff'
+        {/* Simple Donut Chart using CSS */}
+        <div className="relative w-48 h-48 mx-auto mb-6">
+          {/* Background Circle */}
+          <div className="absolute inset-0 rounded-full bg-gray-700"></div>
+
+          {/* Center Circle with Stats */}
+          <div className="absolute inset-8 rounded-full bg-gray-900 flex items-center justify-center border-4 border-gray-800">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-white">{totalClicks.toLocaleString()}</div>
+              <div className="text-xs text-gray-400">Total Clicks</div>
+            </div>
+          </div>
+
+          {/* Device Segments */}
+          {sortedDevices.map(([device, clicks], index) => {
+            const percentage = (clicks / totalClicks) * 100;
+            const startAngle = sortedDevices.slice(0, index).reduce((acc, [, c]) => acc + (c / totalClicks) * 360, 0);
+            const endAngle = startAngle + (percentage * 3.6);
+
+            return (
+              <div
+                key={device}
+                className="absolute inset-0 rounded-full"
+                style={{
+                  background: `conic-gradient(from ${startAngle}deg, transparent 0deg, ${pieColors[device] || '#6b7280'} 0deg, ${pieColors[device] || '#6b7280'} ${percentage * 3.6}deg, transparent ${percentage * 3.6}deg)`,
+                  mask: 'radial-gradient(circle at center, transparent 32px, black 32px)',
+                  WebkitMask: 'radial-gradient(circle at center, transparent 32px, black 32px)'
                 }}
-                formatter={(value: any, name: any) => [
-                  `${value} clicks (${pieData.find(d => d.name === name)?.percentage}%)`,
-                  name
-                ]}
               />
-            </PieChart>
-          </ResponsiveContainer>
+            );
+          })}
         </div>
 
         {/* Legend */}
         <div className="grid grid-cols-2 gap-3">
           {sortedDevices.map(([device, clicks]) => {
             const percentage = ((clicks / totalClicks) * 100).toFixed(1);
-            
+
             return (
               <div key={device} className="flex items-center gap-2">
-                <div className={`w-3 h-3 rounded-full bg-gradient-to-br ${deviceColors[device] || 'from-gray-500 to-gray-600'}`} />
-                <span className="text-sm text-gray-300">{device} ({percentage}%)</span>
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: pieColors[device] || '#6b7280' }}
+                />
+                <div className="text-sm">
+                  <div className="text-white font-medium">{device}</div>
+                  <div className="text-gray-400 text-xs">{percentage}% • {clicks.toLocaleString()}</div>
+                </div>
               </div>
             );
           })}
