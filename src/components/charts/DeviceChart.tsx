@@ -37,31 +37,29 @@ const DeviceChart: React.FC<DeviceChartProps> = ({ data, totalClicks }) => {
           const progressValue = (clicks / maxClicks) * 100;
 
           return (
-            <Card key={device} className="bg-gray-800/50 border-gray-700 hover:bg-gray-800/70 transition-colors">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className={`p-3 rounded-lg bg-gradient-to-br ${deviceColors[device] || 'from-gray-500 to-gray-600'}`}>
-                      {deviceIcons[device] || <Monitor className="w-5 h-5 text-white" />}
-                    </div>
-                    <div>
-                      <p className="font-semibold text-white">{device}</p>
-                      <p className="text-sm text-gray-400">
-                        {clicks.toLocaleString()} clicks • {percentage}%
-                      </p>
-                    </div>
+            <div key={device} className="bg-gray-50 border border-gray-200 rounded-lg p-4 hover:bg-gray-100 transition-colors">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-gray-100 rounded-lg">
+                    {deviceIcons[device] || <Monitor className="w-5 h-5 text-gray-600" />}
                   </div>
-                  <div className="text-right">
-                    <div className="text-lg font-bold text-white">{percentage}%</div>
+                  <div>
+                    <p className="font-semibold text-gray-900">{device}</p>
+                    <p className="text-sm text-gray-600">
+                      {clicks.toLocaleString()} clicks • {percentage}%
+                    </p>
                   </div>
                 </div>
+                <div className="text-right">
+                  <div className="text-lg font-bold text-gray-900">{percentage}%</div>
+                </div>
+              </div>
 
-                <Progress
-                  value={progressValue}
-                  className="h-3 bg-gray-700"
-                />
-              </CardContent>
-            </Card>
+              <Progress
+                value={progressValue}
+                className="h-3 bg-gray-200"
+              />
+            </div>
           );
         })}
       </div>
@@ -121,32 +119,28 @@ const DeviceChart: React.FC<DeviceChartProps> = ({ data, totalClicks }) => {
       </div>
 
       {/* Mobile vs Desktop Comparison */}
-      <div className="grid grid-cols-2 gap-4">
-        <Card className="bg-gradient-to-br from-green-600/20 to-emerald-600/20 border-green-500/30">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3 mb-2">
-              <Smartphone className="w-5 h-5 text-green-400" />
-              <span className="font-semibold text-green-400">Mobile</span>
-            </div>
-            <div className="text-2xl font-bold text-white">
-              {((((data.Mobile || 0) + (data.Tablet || 0)) / totalClicks) * 100).toFixed(1)}%
-            </div>
-            <div className="text-sm text-gray-300">Mobile + Tablet</div>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-2 gap-4 mt-6">
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+          <div className="flex items-center gap-3 mb-2">
+            <Smartphone className="w-5 h-5 text-green-600" />
+            <span className="font-semibold text-green-700">Mobile</span>
+          </div>
+          <div className="text-2xl font-bold text-green-600">
+            {((((data.Mobile || 0) + (data.Tablet || 0)) / totalClicks) * 100).toFixed(1)}%
+          </div>
+          <div className="text-sm text-green-700">Mobile + Tablet</div>
+        </div>
 
-        <Card className="bg-gradient-to-br from-blue-600/20 to-cyan-600/20 border-blue-500/30">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3 mb-2">
-              <Monitor className="w-5 h-5 text-blue-400" />
-              <span className="font-semibold text-blue-400">Desktop</span>
-            </div>
-            <div className="text-2xl font-bold text-white">
-              {((((data.Desktop || 0) + (data.Laptop || 0)) / totalClicks) * 100).toFixed(1)}%
-            </div>
-            <div className="text-sm text-gray-300">Desktop + Laptop</div>
-          </CardContent>
-        </Card>
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="flex items-center gap-3 mb-2">
+            <Monitor className="w-5 h-5 text-blue-600" />
+            <span className="font-semibold text-blue-700">Desktop</span>
+          </div>
+          <div className="text-2xl font-bold text-blue-600">
+            {((((data.Desktop || 0) + (data.Laptop || 0)) / totalClicks) * 100).toFixed(1)}%
+          </div>
+          <div className="text-sm text-blue-700">Desktop + Laptop</div>
+        </div>
       </div>
     </div>
   );

@@ -93,31 +93,31 @@ const Analytics: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#0D0D0D] text-white">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="border-b border-gray-800 bg-gray-900/50">
+      <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => navigate('/dashboard')}
-                className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
               >
-                <ArrowLeft className="w-5 h-5" />
+                <ArrowLeft className="w-5 h-5 text-gray-600" />
               </button>
               <div>
-                <h1 className="text-2xl font-bold">Link Analytics</h1>
-                <p className="text-gray-400 text-sm">
+                <h1 className="text-2xl font-bold text-gray-900">Link Analytics</h1>
+                <p className="text-gray-600 text-sm">
                   {link.title || 'Untitled Link'} • trackerr.pro/{link.shortCode}
                 </p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-3">
               <select
                 value={timeRange}
                 onChange={(e) => setTimeRange(e.target.value)}
-                className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm"
+                className="bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="24h">Last 24 Hours</option>
                 <option value="7d">Last 7 Days</option>
@@ -133,139 +133,137 @@ const Analytics: React.FC = () => {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Overview Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="stat-card bg-gradient-to-br from-blue-600 to-blue-700 border-blue-500/50 hover-lift">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-blue-100 text-sm">Total Clicks</p>
-                  <p className="text-3xl font-bold text-white counter">{analytics.totalClicks.toLocaleString()}</p>
+                  <p className="text-gray-600 text-sm font-medium">Total Clicks</p>
+                  <p className="text-3xl font-bold text-gray-900 mt-1">{analytics.totalClicks.toLocaleString()}</p>
                 </div>
-                <MousePointer className="w-8 h-8 text-blue-200 float" />
+                <div className="p-3 bg-blue-50 rounded-lg">
+                  <MousePointer className="w-6 h-6 text-blue-600" />
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="stat-card bg-gradient-to-br from-green-600 to-green-700 border-green-500/50 hover-lift">
+          <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-green-100 text-sm">Unique Visitors</p>
-                  <p className="text-3xl font-bold text-white counter">{analytics.uniqueClicks.toLocaleString()}</p>
+                  <p className="text-gray-600 text-sm font-medium">Unique Visitors</p>
+                  <p className="text-3xl font-bold text-gray-900 mt-1">{analytics.uniqueClicks.toLocaleString()}</p>
                 </div>
-                <Users className="w-8 h-8 text-green-200 float" />
+                <div className="p-3 bg-green-50 rounded-lg">
+                  <Users className="w-6 h-6 text-green-600" />
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="stat-card bg-gradient-to-br from-purple-600 to-purple-700 border-purple-500/50 hover-lift">
+          <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-purple-100 text-sm">Countries</p>
-                  <p className="text-3xl font-bold text-white counter">{Object.keys(analytics.clicksByCountry).length}</p>
+                  <p className="text-gray-600 text-sm font-medium">Countries</p>
+                  <p className="text-3xl font-bold text-gray-900 mt-1">{Object.keys(analytics.clicksByCountry).length}</p>
                 </div>
-                <Globe className="w-8 h-8 text-purple-200 float" />
+                <div className="p-3 bg-purple-50 rounded-lg">
+                  <Globe className="w-6 h-6 text-purple-600" />
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="stat-card bg-gradient-to-br from-orange-600 to-orange-700 border-orange-500/50 hover-lift">
+          <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-orange-100 text-sm">Click Rate</p>
-                  <p className="text-3xl font-bold text-white counter">
+                  <p className="text-gray-600 text-sm font-medium">Click Rate</p>
+                  <p className="text-3xl font-bold text-gray-900 mt-1">
                     {analytics.totalClicks > 0 ? ((analytics.uniqueClicks / analytics.totalClicks) * 100).toFixed(1) : 0}%
                   </p>
                 </div>
-                <TrendingUp className="w-8 h-8 text-orange-200 float" />
+                <div className="p-3 bg-orange-50 rounded-lg">
+                  <TrendingUp className="w-6 h-6 text-orange-600" />
+                </div>
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Main Analytics Tabs */}
-        <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 bg-gray-800 border-gray-700 mb-8">
-            <TabsTrigger value="overview" className="data-[state=active]:bg-gray-700">
-              Overview
-            </TabsTrigger>
-            <TabsTrigger value="geography" className="data-[state=active]:bg-gray-700">
-              Geography
-            </TabsTrigger>
-            <TabsTrigger value="devices" className="data-[state=active]:bg-gray-700">
-              Devices
-            </TabsTrigger>
-            <TabsTrigger value="activity" className="data-[state=active]:bg-gray-700">
-              Activity
-            </TabsTrigger>
-          </TabsList>
+        {/* Geographic Distribution */}
+        <div className="mb-12">
+          <Card className="bg-white border border-gray-200 shadow-sm">
+            <CardHeader className="border-b border-gray-100">
+              <CardTitle className="flex items-center gap-2 text-gray-900 text-xl font-semibold">
+                <Globe className="w-5 h-5 text-gray-600" />
+                Geographic Distribution
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <CountryChart data={analytics.clicksByCountry} totalClicks={analytics.totalClicks} />
+            </CardContent>
+          </Card>
+        </div>
 
-          <TabsContent value="overview" className="space-y-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <Card className="chart-container bg-gray-900/50 border-gray-700 hover-lift">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-white">
-                    <Globe className="w-5 h-5 text-blue-400" />
-                    Browser Usage
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <BrowserChart data={analytics.clicksByBrowser} totalClicks={analytics.totalClicks} />
-                </CardContent>
-              </Card>
+        {/* Device & Browser Analytics */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          <Card className="bg-white border border-gray-200 shadow-sm">
+            <CardHeader className="border-b border-gray-100">
+              <CardTitle className="flex items-center gap-2 text-gray-900 text-xl font-semibold">
+                <Smartphone className="w-5 h-5 text-gray-600" />
+                Device Breakdown
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <DeviceChart data={analytics.clicksByDevice} totalClicks={analytics.totalClicks} />
+            </CardContent>
+          </Card>
 
-              <Card className="chart-container bg-gray-900/50 border-gray-700 hover-lift">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-white">
-                    <Calendar className="w-5 h-5 text-green-400" />
-                    Time Analytics
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <TimeChart data={analytics.clicksByDate} totalClicks={analytics.totalClicks} />
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
+          <Card className="bg-white border border-gray-200 shadow-sm">
+            <CardHeader className="border-b border-gray-100">
+              <CardTitle className="flex items-center gap-2 text-gray-900 text-xl font-semibold">
+                <Globe className="w-5 h-5 text-gray-600" />
+                Browser Usage
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <BrowserChart data={analytics.clicksByBrowser} totalClicks={analytics.totalClicks} />
+            </CardContent>
+          </Card>
+        </div>
 
-          <TabsContent value="geography">
-            <Card className="chart-container bg-gray-900/50 border-gray-700 hover-lift">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white">
-                  <Globe className="w-5 h-5 text-blue-400" />
-                  Geographic Distribution
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CountryChart data={analytics.clicksByCountry} totalClicks={analytics.totalClicks} />
-              </CardContent>
-            </Card>
-          </TabsContent>
+        {/* Time Analytics */}
+        <div className="mb-12">
+          <Card className="bg-white border border-gray-200 shadow-sm">
+            <CardHeader className="border-b border-gray-100">
+              <CardTitle className="flex items-center gap-2 text-gray-900 text-xl font-semibold">
+                <Calendar className="w-5 h-5 text-gray-600" />
+                Click Timeline
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <TimeChart data={analytics.clicksByDate} totalClicks={analytics.totalClicks} />
+            </CardContent>
+          </Card>
+        </div>
 
-          <TabsContent value="devices">
-            <Card className="chart-container bg-gray-900/50 border-gray-700 hover-lift">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white">
-                  <Smartphone className="w-5 h-5 text-green-400" />
-                  Device Breakdown
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <DeviceChart data={analytics.clicksByDevice} totalClicks={analytics.totalClicks} />
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="activity">
-            <Card className="bg-gray-900/50 border-gray-700">
-              <CardContent className="p-6">
-                <ActivityFeed recentClicks={analytics.recentClicks} />
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+        {/* Recent Activity */}
+        <div className="mb-8">
+          <Card className="bg-white border border-gray-200 shadow-sm">
+            <CardHeader className="border-b border-gray-100">
+              <CardTitle className="flex items-center gap-2 text-gray-900 text-xl font-semibold">
+                <Zap className="w-5 h-5 text-gray-600" />
+                Recent Activity
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <ActivityFeed recentClicks={analytics.recentClicks} />
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );

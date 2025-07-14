@@ -20,86 +20,63 @@ const CountryChart: React.FC<CountryChartProps> = ({ data, totalClicks }) => {
   const maxClicks = Math.max(...Object.values(data));
 
   return (
-    <Tabs defaultValue="list" className="w-full">
-      <TabsList className="grid w-full grid-cols-2 bg-gray-800 border-gray-700">
-        <TabsTrigger value="list" className="data-[state=active]:bg-gray-700">
-          Country List
-        </TabsTrigger>
-        <TabsTrigger value="map" className="data-[state=active]:bg-gray-700">
-          World Map
-        </TabsTrigger>
-      </TabsList>
+    <div className="space-y-8">
+      {/* Interactive World Map */}
+      <div className="mb-8">
+        <WorldMap data={data} totalClicks={totalClicks} />
+      </div>
 
-      <TabsContent value="list" className="space-y-4 mt-6">
-        {/* Top Countries List */}
+      {/* Top Countries List */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Countries</h3>
         <div className="space-y-3">
           {sortedCountries.map(([country, clicks], index) => {
             const percentage = ((clicks / totalClicks) * 100).toFixed(1);
             const progressValue = (clicks / maxClicks) * 100;
 
             return (
-              <Card key={country} className="bg-gray-800/50 border-gray-700 hover:bg-gray-800/70 transition-colors">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      <CountryFlag country={country} size="md" />
-                      <div>
-                        <p className="font-semibold text-white">{country}</p>
-                        <p className="text-sm text-gray-400">
-                          {clicks.toLocaleString()} clicks • {percentage}%
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-bold text-blue-400">#{index + 1}</span>
-                      {index === 0 && <TrendingUp className="w-4 h-4 text-green-400" />}
+              <div key={country} className="bg-gray-50 border border-gray-200 rounded-lg p-4 hover:bg-gray-100 transition-colors">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-3">
+                    <CountryFlag country={country} size="md" />
+                    <div>
+                      <p className="font-semibold text-gray-900">{country}</p>
+                      <p className="text-sm text-gray-600">
+                        {clicks.toLocaleString()} clicks • {percentage}%
+                      </p>
                     </div>
                   </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-bold text-gray-600">#{index + 1}</span>
+                    {index === 0 && <TrendingUp className="w-4 h-4 text-green-600" />}
+                  </div>
+                </div>
 
-                  <Progress
-                    value={progressValue}
-                    className="h-2 bg-gray-700"
-                  />
-                </CardContent>
-              </Card>
+                <Progress
+                  value={progressValue}
+                  className="h-2 bg-gray-200"
+                />
+              </div>
             );
           })}
         </div>
 
         {/* Summary Stats */}
         <div className="grid grid-cols-2 gap-4 mt-6">
-          <Card className="bg-gradient-to-br from-blue-600/20 to-purple-600/20 border-blue-500/30">
-            <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-blue-400">{Object.keys(data).length}</div>
-              <div className="text-sm text-gray-300">Countries Reached</div>
-            </CardContent>
-          </Card>
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+            <div className="text-2xl font-bold text-blue-600">{Object.keys(data).length}</div>
+            <div className="text-sm text-blue-700">Countries Reached</div>
+          </div>
 
-          <Card className="bg-gradient-to-br from-green-600/20 to-blue-600/20 border-green-500/30">
-            <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-green-400">
-                {sortedCountries.length > 0 ? sortedCountries[0][0] : 'N/A'}
-              </div>
-              <div className="text-sm text-gray-300">Top Country</div>
-            </CardContent>
-          </Card>
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+            <div className="text-2xl font-bold text-green-600">
+              {sortedCountries.length > 0 ? sortedCountries[0][0] : 'N/A'}
+            </div>
+            <div className="text-sm text-green-700">Top Country</div>
+          </div>
         </div>
-      </TabsContent>
-
-      <TabsContent value="map" className="mt-6">
-        <Card className="bg-gray-800/50 border-gray-700">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-white">
-              <Globe className="w-5 h-5 text-blue-400" />
-              Interactive World Map
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <WorldMap data={data} totalClicks={totalClicks} />
-          </CardContent>
-        </Card>
-      </TabsContent>
-    </Tabs>
+      </div>
+    </div>
   );
 };
 

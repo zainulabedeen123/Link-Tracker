@@ -64,19 +64,15 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({ recentClicks }) => {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h4 className="text-lg font-semibold flex items-center gap-2">
-          <Zap className="w-5 h-5 text-yellow-400" />
-          Live Activity Feed
-        </h4>
         <div className="flex items-center gap-2">
-          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-          <span className="text-xs text-gray-400">Live</span>
+          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          <span className="text-sm text-gray-600">Live Activity</span>
         </div>
       </div>
 
       <div className="space-y-3 max-h-96 overflow-y-auto custom-scrollbar">
         {recentClicks.length === 0 ? (
-          <div className="text-center py-8 text-gray-400">
+          <div className="text-center py-8 text-gray-500">
             <Wifi className="w-8 h-8 mx-auto mb-2 opacity-50" />
             <p>No recent activity</p>
             <p className="text-xs">Clicks will appear here in real-time</p>
@@ -85,25 +81,18 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({ recentClicks }) => {
           recentClicks.map((click, index) => (
             <div
               key={click.id}
-              className="group relative bg-gray-800/50 border border-gray-700 rounded-lg p-4 hover:border-gray-600 transition-all duration-200 hover:bg-gray-800/70"
-              style={{
-                animationDelay: `${index * 100}ms`,
-                animation: 'slideInRight 0.5s ease-out forwards'
-              }}
+              className="bg-gray-50 border border-gray-200 rounded-lg p-4 hover:bg-gray-100 transition-colors"
             >
-              {/* Click indicator */}
-              <div className="absolute -left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 bg-blue-500 rounded-full border-2 border-gray-900 group-hover:bg-blue-400 transition-colors"></div>
-              
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   {/* Location & Flag */}
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-lg">{countryFlags[click.country || 'Unknown'] || '🌍'}</span>
                     <div>
-                      <p className="text-sm font-semibold text-white">
+                      <p className="text-sm font-semibold text-gray-900">
                         {getLocationString(click)}
                       </p>
-                      <p className="text-xs text-gray-400 flex items-center gap-1">
+                      <p className="text-xs text-gray-600 flex items-center gap-1">
                         <Clock className="w-3 h-3" />
                         {getTimeAgo(click.timestamp)}
                       </p>
@@ -112,15 +101,15 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({ recentClicks }) => {
 
                   {/* Device & Browser Info */}
                   <div className="flex items-center gap-4 text-xs">
-                    <div className="flex items-center gap-1 text-gray-300">
+                    <div className="flex items-center gap-1 text-gray-700">
                       {getDeviceIcon(click.device)}
                       <span>{click.device}</span>
                     </div>
-                    <div className="text-gray-400">
+                    <div className="text-gray-600">
                       {click.browser} • {click.os}
                     </div>
                     {click.isBot && (
-                      <span className="bg-red-600/20 text-red-400 px-2 py-1 rounded-full text-xs">
+                      <span className="bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs">
                         Bot
                       </span>
                     )}
@@ -129,13 +118,10 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({ recentClicks }) => {
 
                 {/* Status indicator */}
                 <div className="flex flex-col items-end gap-1">
-                  <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                   <span className="text-xs text-gray-500">#{recentClicks.length - index}</span>
                 </div>
               </div>
-
-              {/* Hover effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-purple-600/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
             </div>
           ))
         )}
@@ -143,23 +129,23 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({ recentClicks }) => {
 
       {/* Activity Summary */}
       {recentClicks.length > 0 && (
-        <div className="bg-gradient-to-r from-blue-600/10 to-purple-600/10 border border-blue-500/20 rounded-xl p-4 mt-6">
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mt-6">
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
-              <div className="text-lg font-bold text-blue-400">{recentClicks.length}</div>
-              <div className="text-xs text-gray-400">Recent Clicks</div>
+              <div className="text-lg font-bold text-blue-600">{recentClicks.length}</div>
+              <div className="text-xs text-blue-700">Recent Clicks</div>
             </div>
             <div>
-              <div className="text-lg font-bold text-green-400">
+              <div className="text-lg font-bold text-green-600">
                 {new Set(recentClicks.map(c => c.country)).size}
               </div>
-              <div className="text-xs text-gray-400">Countries</div>
+              <div className="text-xs text-green-700">Countries</div>
             </div>
             <div>
-              <div className="text-lg font-bold text-purple-400">
+              <div className="text-lg font-bold text-purple-600">
                 {new Set(recentClicks.map(c => c.device)).size}
               </div>
-              <div className="text-xs text-gray-400">Devices</div>
+              <div className="text-xs text-purple-700">Devices</div>
             </div>
           </div>
         </div>

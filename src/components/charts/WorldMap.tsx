@@ -91,7 +91,7 @@ const WorldMap: React.FC<WorldMapProps> = ({ data, totalClicks }) => {
   };
 
   return (
-    <div className="w-full h-96 bg-gray-900 rounded-xl overflow-hidden border border-gray-700">
+    <div className="w-full h-96 bg-gray-100 rounded-xl overflow-hidden border border-gray-200">
       <ComposableMap
         projection="geoMercator"
         projectionConfig={{
@@ -129,19 +129,19 @@ const WorldMap: React.FC<WorldMapProps> = ({ data, totalClicks }) => {
                     }}
                     style={{
                       default: {
-                        fill: hasData ? '#374151' : '#1f2937',
+                        fill: hasData ? '#e5e7eb' : '#f3f4f6',
                         outline: 'none',
-                        stroke: '#4b5563',
+                        stroke: '#d1d5db',
                         strokeWidth: 0.5,
                       },
                       hover: {
-                        fill: hasData ? '#4b5563' : '#374151',
+                        fill: hasData ? '#d1d5db' : '#e5e7eb',
                         outline: 'none',
-                        stroke: '#6b7280',
+                        stroke: '#9ca3af',
                         strokeWidth: 1,
                       },
                       pressed: {
-                        fill: '#6b7280',
+                        fill: '#9ca3af',
                         outline: 'none',
                       },
                     }}
@@ -188,30 +188,30 @@ const WorldMap: React.FC<WorldMapProps> = ({ data, totalClicks }) => {
 
       {/* Tooltip */}
       {tooltipContent && (
-        <div className="absolute top-4 left-4 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm border border-gray-600 shadow-lg">
+        <div className="absolute top-4 left-4 bg-white text-gray-900 px-3 py-2 rounded-lg text-sm border border-gray-300 shadow-lg">
           {tooltipContent}
         </div>
       )}
 
       {/* Legend */}
-      <div className="absolute bottom-4 right-4 bg-gray-800/90 backdrop-blur-sm rounded-lg p-3 border border-gray-600">
-        <h4 className="text-white text-sm font-semibold mb-2">Click Volume</h4>
+      <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg p-3 border border-gray-300">
+        <h4 className="text-gray-900 text-sm font-semibold mb-2">Click Volume</h4>
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-red-500"></div>
-            <span className="text-gray-300 text-xs">High</span>
+            <span className="text-gray-700 text-xs">High</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-orange-500"></div>
-            <span className="text-gray-300 text-xs">Medium</span>
+            <span className="text-gray-700 text-xs">Medium</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-            <span className="text-gray-300 text-xs">Low</span>
+            <span className="text-gray-700 text-xs">Low</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-green-500"></div>
-            <span className="text-gray-300 text-xs">Minimal</span>
+            <span className="text-gray-700 text-xs">Minimal</span>
           </div>
         </div>
       </div>
@@ -220,13 +220,13 @@ const WorldMap: React.FC<WorldMapProps> = ({ data, totalClicks }) => {
       <div className="absolute top-4 right-4 flex flex-col gap-1">
         <button
           onClick={() => setPosition(prev => ({ ...prev, zoom: Math.min(prev.zoom * 1.5, 8) }))}
-          className="w-8 h-8 bg-gray-800/90 hover:bg-gray-700 text-white rounded border border-gray-600 flex items-center justify-center text-sm font-bold"
+          className="w-8 h-8 bg-white hover:bg-gray-50 text-gray-900 rounded border border-gray-300 flex items-center justify-center text-sm font-bold shadow-sm"
         >
           +
         </button>
         <button
           onClick={() => setPosition(prev => ({ ...prev, zoom: Math.max(prev.zoom / 1.5, 0.5) }))}
-          className="w-8 h-8 bg-gray-800/90 hover:bg-gray-700 text-white rounded border border-gray-600 flex items-center justify-center text-sm font-bold"
+          className="w-8 h-8 bg-white hover:bg-gray-50 text-gray-900 rounded border border-gray-300 flex items-center justify-center text-sm font-bold shadow-sm"
         >
           −
         </button>
