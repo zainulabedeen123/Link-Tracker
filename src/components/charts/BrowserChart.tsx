@@ -37,27 +37,27 @@ const BrowserChart: React.FC<BrowserChartProps> = ({ data, totalClicks }) => {
         const progressValue = (clicks / maxClicks) * 100;
 
         return (
-          <div key={browser} className="bg-gray-50 border border-gray-200 rounded-lg p-4 hover:bg-gray-100 transition-colors">
+          <div key={browser} className="bg-gray-800/50 border border-gray-700 rounded-lg p-4 hover:bg-gray-800/70 transition-colors">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-gray-100 rounded-lg">
-                  {browserIcons[browser] || <Globe className="w-5 h-5 text-gray-600" />}
+                <div className="p-2 bg-gray-700 rounded-lg">
+                  {browserIcons[browser] || <Globe className="w-5 h-5 text-gray-300" />}
                 </div>
                 <div>
-                  <p className="font-semibold text-gray-900">{browser}</p>
-                  <p className="text-sm text-gray-600">{clicks.toLocaleString()} clicks</p>
+                  <p className="font-semibold text-white">{browser}</p>
+                  <p className="text-sm text-gray-400">{clicks.toLocaleString()} clicks</p>
                 </div>
               </div>
 
               <div className="text-right">
-                <div className="text-lg font-bold text-gray-900">{percentage}%</div>
+                <div className="text-lg font-bold text-white">{percentage}%</div>
                 <div className="text-xs text-gray-500">#{index + 1}</div>
               </div>
             </div>
 
             <Progress
               value={progressValue}
-              className="h-2 bg-gray-200"
+              className="h-2 bg-gray-700"
             />
           </div>
         );

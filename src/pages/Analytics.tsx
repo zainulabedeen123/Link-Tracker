@@ -93,21 +93,21 @@ const Analytics: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#0D0D0D]">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-gray-900/50 border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => navigate('/dashboard')}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
               >
-                <ArrowLeft className="w-5 h-5 text-gray-600" />
+                <ArrowLeft className="w-5 h-5 text-gray-400" />
               </button>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Link Analytics</h1>
-                <p className="text-gray-600 text-sm">
+                <h1 className="text-2xl font-bold text-white">Link Analytics</h1>
+                <p className="text-gray-400 text-sm">
                   {link.title || 'Untitled Link'} • trackerr.pro/{link.shortCode}
                 </p>
               </div>
@@ -117,7 +117,7 @@ const Analytics: React.FC = () => {
               <select
                 value={timeRange}
                 onChange={(e) => setTimeRange(e.target.value)}
-                className="bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="24h">Last 24 Hours</option>
                 <option value="7d">Last 7 Days</option>
@@ -134,59 +134,59 @@ const Analytics: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Overview Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+          <Card className="bg-gray-900/50 border border-gray-700 shadow-sm hover:shadow-md transition-shadow">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-600 text-sm font-medium">Total Clicks</p>
-                  <p className="text-3xl font-bold text-gray-900 mt-1">{analytics.totalClicks.toLocaleString()}</p>
+                  <p className="text-gray-400 text-sm font-medium">Total Clicks</p>
+                  <p className="text-3xl font-bold text-white mt-1">{analytics.totalClicks.toLocaleString()}</p>
                 </div>
-                <div className="p-3 bg-blue-50 rounded-lg">
-                  <MousePointer className="w-6 h-6 text-blue-600" />
+                <div className="p-3 bg-blue-500/20 rounded-lg">
+                  <MousePointer className="w-6 h-6 text-blue-400" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+          <Card className="bg-gray-900/50 border border-gray-700 shadow-sm hover:shadow-md transition-shadow">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-600 text-sm font-medium">Unique Visitors</p>
-                  <p className="text-3xl font-bold text-gray-900 mt-1">{analytics.uniqueClicks.toLocaleString()}</p>
+                  <p className="text-gray-400 text-sm font-medium">Unique Visitors</p>
+                  <p className="text-3xl font-bold text-white mt-1">{analytics.uniqueClicks.toLocaleString()}</p>
                 </div>
-                <div className="p-3 bg-green-50 rounded-lg">
-                  <Users className="w-6 h-6 text-green-600" />
+                <div className="p-3 bg-green-500/20 rounded-lg">
+                  <Users className="w-6 h-6 text-green-400" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+          <Card className="bg-gray-900/50 border border-gray-700 shadow-sm hover:shadow-md transition-shadow">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-600 text-sm font-medium">Countries</p>
-                  <p className="text-3xl font-bold text-gray-900 mt-1">{Object.keys(analytics.clicksByCountry).length}</p>
+                  <p className="text-gray-400 text-sm font-medium">Countries</p>
+                  <p className="text-3xl font-bold text-white mt-1">{Object.keys(analytics.clicksByCountry).length}</p>
                 </div>
-                <div className="p-3 bg-purple-50 rounded-lg">
-                  <Globe className="w-6 h-6 text-purple-600" />
+                <div className="p-3 bg-purple-500/20 rounded-lg">
+                  <Globe className="w-6 h-6 text-purple-400" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+          <Card className="bg-gray-900/50 border border-gray-700 shadow-sm hover:shadow-md transition-shadow">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-600 text-sm font-medium">Click Rate</p>
-                  <p className="text-3xl font-bold text-gray-900 mt-1">
+                  <p className="text-gray-400 text-sm font-medium">Click Rate</p>
+                  <p className="text-3xl font-bold text-white mt-1">
                     {analytics.totalClicks > 0 ? ((analytics.uniqueClicks / analytics.totalClicks) * 100).toFixed(1) : 0}%
                   </p>
                 </div>
-                <div className="p-3 bg-orange-50 rounded-lg">
-                  <TrendingUp className="w-6 h-6 text-orange-600" />
+                <div className="p-3 bg-orange-500/20 rounded-lg">
+                  <TrendingUp className="w-6 h-6 text-orange-400" />
                 </div>
               </div>
             </CardContent>
@@ -195,10 +195,10 @@ const Analytics: React.FC = () => {
 
         {/* Geographic Distribution */}
         <div className="mb-12">
-          <Card className="bg-white border border-gray-200 shadow-sm">
-            <CardHeader className="border-b border-gray-100">
-              <CardTitle className="flex items-center gap-2 text-gray-900 text-xl font-semibold">
-                <Globe className="w-5 h-5 text-gray-600" />
+          <Card className="bg-gray-900/50 border border-gray-700 shadow-sm">
+            <CardHeader className="border-b border-gray-700">
+              <CardTitle className="flex items-center gap-2 text-white text-xl font-semibold">
+                <Globe className="w-5 h-5 text-gray-400" />
                 Geographic Distribution
               </CardTitle>
             </CardHeader>
@@ -210,10 +210,10 @@ const Analytics: React.FC = () => {
 
         {/* Device & Browser Analytics */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-          <Card className="bg-white border border-gray-200 shadow-sm">
-            <CardHeader className="border-b border-gray-100">
-              <CardTitle className="flex items-center gap-2 text-gray-900 text-xl font-semibold">
-                <Smartphone className="w-5 h-5 text-gray-600" />
+          <Card className="bg-gray-900/50 border border-gray-700 shadow-sm">
+            <CardHeader className="border-b border-gray-700">
+              <CardTitle className="flex items-center gap-2 text-white text-xl font-semibold">
+                <Smartphone className="w-5 h-5 text-gray-400" />
                 Device Breakdown
               </CardTitle>
             </CardHeader>
@@ -222,10 +222,10 @@ const Analytics: React.FC = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-white border border-gray-200 shadow-sm">
-            <CardHeader className="border-b border-gray-100">
-              <CardTitle className="flex items-center gap-2 text-gray-900 text-xl font-semibold">
-                <Globe className="w-5 h-5 text-gray-600" />
+          <Card className="bg-gray-900/50 border border-gray-700 shadow-sm">
+            <CardHeader className="border-b border-gray-700">
+              <CardTitle className="flex items-center gap-2 text-white text-xl font-semibold">
+                <Globe className="w-5 h-5 text-gray-400" />
                 Browser Usage
               </CardTitle>
             </CardHeader>
@@ -237,10 +237,10 @@ const Analytics: React.FC = () => {
 
         {/* Time Analytics */}
         <div className="mb-12">
-          <Card className="bg-white border border-gray-200 shadow-sm">
-            <CardHeader className="border-b border-gray-100">
-              <CardTitle className="flex items-center gap-2 text-gray-900 text-xl font-semibold">
-                <Calendar className="w-5 h-5 text-gray-600" />
+          <Card className="bg-gray-900/50 border border-gray-700 shadow-sm">
+            <CardHeader className="border-b border-gray-700">
+              <CardTitle className="flex items-center gap-2 text-white text-xl font-semibold">
+                <Calendar className="w-5 h-5 text-gray-400" />
                 Click Timeline
               </CardTitle>
             </CardHeader>
@@ -252,10 +252,10 @@ const Analytics: React.FC = () => {
 
         {/* Recent Activity */}
         <div className="mb-8">
-          <Card className="bg-white border border-gray-200 shadow-sm">
-            <CardHeader className="border-b border-gray-100">
-              <CardTitle className="flex items-center gap-2 text-gray-900 text-xl font-semibold">
-                <Zap className="w-5 h-5 text-gray-600" />
+          <Card className="bg-gray-900/50 border border-gray-700 shadow-sm">
+            <CardHeader className="border-b border-gray-700">
+              <CardTitle className="flex items-center gap-2 text-white text-xl font-semibold">
+                <Zap className="w-5 h-5 text-gray-400" />
                 Recent Activity
               </CardTitle>
             </CardHeader>

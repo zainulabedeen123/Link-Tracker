@@ -30,7 +30,7 @@ const TimeChart: React.FC<TimeChartProps> = ({ data, totalClicks }) => {
   return (
     <div className="space-y-6">
       {/* Bar Chart */}
-      <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+      <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
         <div className="flex items-end justify-between h-48 gap-2">
           {sortedDates.map(([date, clicks]) => {
             const height = maxClicks > 0 ? (clicks / maxClicks) * 100 : 0;
@@ -39,7 +39,7 @@ const TimeChart: React.FC<TimeChartProps> = ({ data, totalClicks }) => {
               <div key={date} className="flex-1 flex flex-col items-center">
                 <div className="relative w-full flex items-end justify-center h-40">
                   <div
-                    className="w-full bg-blue-500 rounded-t-lg transition-all duration-1000 ease-out hover:bg-blue-600 cursor-pointer group"
+                    className="w-full bg-blue-500 rounded-t-lg transition-all duration-1000 ease-out hover:bg-blue-400 cursor-pointer group"
                     style={{ height: `${height}%` }}
                   >
                     {/* Tooltip */}
@@ -50,8 +50,8 @@ const TimeChart: React.FC<TimeChartProps> = ({ data, totalClicks }) => {
                 </div>
 
                 <div className="mt-2 text-center">
-                  <div className="text-xs font-semibold text-gray-900">{getDayName(date)}</div>
-                  <div className="text-xs text-gray-600">{formatDate(date)}</div>
+                  <div className="text-xs font-semibold text-white">{getDayName(date)}</div>
+                  <div className="text-xs text-gray-400">{formatDate(date)}</div>
                 </div>
               </div>
             );
@@ -61,48 +61,48 @@ const TimeChart: React.FC<TimeChartProps> = ({ data, totalClicks }) => {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+        <div className="bg-blue-500/20 border border-blue-500/30 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Calendar className="w-4 h-4 text-blue-600" />
-            <span className="text-sm font-semibold text-blue-700">Today</span>
+            <Calendar className="w-4 h-4 text-blue-400" />
+            <span className="text-sm font-semibold text-blue-300">Today</span>
           </div>
-          <div className="text-xl font-bold text-blue-600">
+          <div className="text-xl font-bold text-blue-400">
             {data[new Date().toISOString().split('T')[0]] || 0}
           </div>
-          <div className="text-xs text-blue-700">clicks</div>
+          <div className="text-xs text-blue-300">clicks</div>
         </div>
 
-        <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+        <div className="bg-green-500/20 border border-green-500/30 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
-            <TrendingUp className="w-4 h-4 text-green-600" />
-            <span className="text-sm font-semibold text-green-700">Peak Day</span>
+            <TrendingUp className="w-4 h-4 text-green-400" />
+            <span className="text-sm font-semibold text-green-300">Peak Day</span>
           </div>
-          <div className="text-xl font-bold text-green-600">
+          <div className="text-xl font-bold text-green-400">
             {Math.max(...Object.values(data))}
           </div>
-          <div className="text-xs text-green-700">clicks</div>
+          <div className="text-xs text-green-300">clicks</div>
         </div>
 
-        <div className="bg-purple-50 border border-purple-200 rounded-xl p-4">
+        <div className="bg-purple-500/20 border border-purple-500/30 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Activity className="w-4 h-4 text-purple-600" />
-            <span className="text-sm font-semibold text-purple-700">Average</span>
+            <Activity className="w-4 h-4 text-purple-400" />
+            <span className="text-sm font-semibold text-purple-300">Average</span>
           </div>
-          <div className="text-xl font-bold text-purple-600">
+          <div className="text-xl font-bold text-purple-400">
             {Object.keys(data).length > 0 ? Math.round(totalClicks / Object.keys(data).length) : 0}
           </div>
-          <div className="text-xs text-purple-700">per day</div>
+          <div className="text-xs text-purple-300">per day</div>
         </div>
 
-        <div className="bg-orange-50 border border-orange-200 rounded-xl p-4">
+        <div className="bg-orange-500/20 border border-orange-500/30 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Clock className="w-4 h-4 text-orange-600" />
-            <span className="text-sm font-semibold text-orange-700">Active Days</span>
+            <Clock className="w-4 h-4 text-orange-400" />
+            <span className="text-sm font-semibold text-orange-300">Active Days</span>
           </div>
-          <div className="text-xl font-bold text-orange-600">
+          <div className="text-xl font-bold text-orange-400">
             {Object.values(data).filter(clicks => clicks > 0).length}
           </div>
-          <div className="text-xs text-orange-700">days</div>
+          <div className="text-xs text-orange-300">days</div>
         </div>
       </div>
 
