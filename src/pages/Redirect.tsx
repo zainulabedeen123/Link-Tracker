@@ -18,10 +18,8 @@ const Redirect: React.FC = () => {
 
       try {
         // Call our backend API to get link data and track the click
-        const API_BASE_URL = import.meta.env.VITE_API_URL || (
-          import.meta.env.PROD ? '' : 'http://localhost:3001'
-        );
-        const response = await fetch(`${API_BASE_URL}/r/${shortCode}`, {
+        const BASE_URL = import.meta.env.PROD ? '' : 'http://localhost:3001';
+        const response = await fetch(`${BASE_URL}/r/${shortCode}`, {
           headers: {
             'x-session-id': `session_${Math.random().toString(36).substring(2, 15)}`
           }

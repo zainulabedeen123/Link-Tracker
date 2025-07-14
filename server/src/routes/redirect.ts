@@ -8,9 +8,11 @@ const router = Router();
 router.get('/:shortCode', async (req: Request, res: Response) => {
   try {
     const { shortCode } = req.params;
-    
+    console.log(`Redirect request for short code: ${shortCode}`);
+
     // Get the link
     const link = await linkService.getLinkByShortCode(shortCode);
+    console.log(`Found link:`, link);
     
     if (!link) {
       // Return 404 page or redirect to main site

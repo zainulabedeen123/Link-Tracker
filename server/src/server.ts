@@ -52,21 +52,21 @@ app.get('/health', (req, res) => {
 // API routes
 app.use('/api/links', linksRouter);
 
-// Redirect routes (for short links)
+// Redirect routes (for short links) - MUST come before static files
 app.use('/r', redirectRouter);
 
 // Serve static files from React build (if in production)
 if (process.env.NODE_ENV === 'production') {
   const buildPath = path.join(__dirname, '../../dist');
   app.use(express.static(buildPath));
-  
-  // Handle React routing
+
+  // Handle React routing - serve index.html for all other routes
   app.get('*', (req, res) => {
-    // Don't serve index.html for API routes or short links
+    // Skip API and redirect routes
     if (req.path.startsWith('/api/') || req.path.startsWith('/r/')) {
       return res.status(404).json({ error: 'Not found' });
     }
-    
+
     res.sendFile(path.join(buildPath, 'index.html'));
   });
 }
