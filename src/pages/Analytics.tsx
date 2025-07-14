@@ -14,7 +14,6 @@ import BrowserChart from '../components/charts/BrowserChart';
 import TimeChart from '../components/charts/TimeChart';
 import ActivityFeed from '../components/charts/ActivityFeed';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import '../styles/analytics.css';
 
 interface AnalyticsData {

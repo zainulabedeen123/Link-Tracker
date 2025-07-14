@@ -1,161 +1,124 @@
-import React from 'react';
-import WorldMap from 'react-svg-worldmap';
+import React, { useState } from 'react';
 
 interface WorldMapProps {
   data: Record<string, number>;
   totalClicks: number;
 }
 
-// Country code mapping for react-svg-worldmap
-const countryCodeMap: Record<string, string> = {
-  'United States': 'US',
-  'United Kingdom': 'GB',
-  'Germany': 'DE',
-  'France': 'FR',
-  'Japan': 'JP',
-  'Australia': 'AU',
-  'Canada': 'CA',
-  'India': 'IN',
-  'Brazil': 'BR',
-  'China': 'CN',
-  'Russia': 'RU',
-  'Italy': 'IT',
-  'Spain': 'ES',
-  'Netherlands': 'NL',
-  'Sweden': 'SE',
-  'Norway': 'NO',
-  'Denmark': 'DK',
-  'Finland': 'FI',
-  'Switzerland': 'CH',
-  'Austria': 'AT',
-  'Belgium': 'BE',
-  'Portugal': 'PT',
-  'Poland': 'PL',
-  'Czech Republic': 'CZ',
-  'Hungary': 'HU',
-  'Greece': 'GR',
-  'Turkey': 'TR',
-  'South Korea': 'KR',
-  'Singapore': 'SG',
-  'Thailand': 'TH',
-  'Vietnam': 'VN',
-  'Philippines': 'PH',
-  'Indonesia': 'ID',
-  'Malaysia': 'MY',
-  'Mexico': 'MX',
-  'Argentina': 'AR',
-  'Chile': 'CL',
-  'Colombia': 'CO',
-  'Peru': 'PE',
-  'South Africa': 'ZA',
-  'Egypt': 'EG',
-  'Nigeria': 'NG',
-  'Kenya': 'KE',
-  'Morocco': 'MA',
-  'Israel': 'IL',
-  'UAE': 'AE',
-  'Saudi Arabia': 'SA',
-  'Ireland': 'IE',
-  'Scotland': 'GB',
-  'Wales': 'GB',
-  'Iceland': 'IS',
-  'Luxembourg': 'LU',
-  'Slovenia': 'SI',
-  'Slovakia': 'SK',
-  'Croatia': 'HR',
-  'Serbia': 'RS',
-  'Bulgaria': 'BG',
-  'Romania': 'RO',
-  'Lithuania': 'LT',
-  'Latvia': 'LV',
-  'Estonia': 'EE',
-  'Malta': 'MT',
-  'Cyprus': 'CY',
-  'Taiwan': 'TW',
-  'Hong Kong': 'HK',
-  'Macau': 'MO',
-  'Mongolia': 'MN',
-  'Kazakhstan': 'KZ',
-  'Uzbekistan': 'UZ',
-  'Pakistan': 'PK',
-  'Bangladesh': 'BD',
-  'Sri Lanka': 'LK',
-  'Myanmar': 'MM',
-  'Cambodia': 'KH',
-  'Laos': 'LA',
-  'Nepal': 'NP',
-  'Bhutan': 'BT',
-  'Maldives': 'MV',
-  'Iran': 'IR',
-  'Iraq': 'IQ',
-  'Jordan': 'JO',
-  'Lebanon': 'LB',
-  'Syria': 'SY',
-  'Kuwait': 'KW',
-  'Qatar': 'QA',
-  'Bahrain': 'BH',
-  'Oman': 'OM',
-  'Yemen': 'YE',
-  'Algeria': 'DZ',
-  'Tunisia': 'TN',
-  'Libya': 'LY',
-  'Sudan': 'SD',
-  'Ethiopia': 'ET',
-  'Ghana': 'GH',
-  'New Zealand': 'NZ',
+// Country flag emojis for visual representation
+const countryFlags: Record<string, string> = {
+  'United States': '🇺🇸',
+  'United Kingdom': '🇬🇧',
+  'Germany': '🇩🇪',
+  'France': '🇫🇷',
+  'Japan': '🇯🇵',
+  'Australia': '🇦🇺',
+  'Canada': '🇨🇦',
+  'India': '🇮🇳',
+  'Brazil': '🇧🇷',
+  'China': '🇨🇳',
+  'Russia': '🇷🇺',
+  'Italy': '🇮🇹',
+  'Spain': '🇪🇸',
+  'Netherlands': '🇳🇱',
+  'Sweden': '🇸🇪',
+  'Norway': '🇳🇴',
+  'Denmark': '🇩🇰',
+  'Finland': '🇫🇮',
+  'Switzerland': '🇨🇭',
+  'Austria': '🇦🇹',
+  'Belgium': '🇧🇪',
+  'Portugal': '🇵🇹',
+  'Poland': '🇵🇱',
+  'Czech Republic': '🇨🇿',
+  'Hungary': '🇭🇺',
+  'Greece': '🇬🇷',
+  'Turkey': '🇹🇷',
+  'South Korea': '🇰🇷',
+  'Singapore': '🇸🇬',
+  'Thailand': '🇹🇭',
+  'Vietnam': '🇻🇳',
+  'Philippines': '🇵🇭',
+  'Indonesia': '🇮🇩',
+  'Malaysia': '🇲🇾',
+  'Mexico': '🇲🇽',
+  'Argentina': '🇦🇷',
+  'Chile': '🇨🇱',
+  'Colombia': '🇨🇴',
+  'Peru': '🇵🇪',
+  'South Africa': '🇿🇦',
+  'Egypt': '🇪🇬',
+  'Nigeria': '🇳🇬',
+  'Kenya': '🇰🇪',
+  'Morocco': '🇲🇦',
+  'Israel': '🇮🇱',
+  'UAE': '🇦🇪',
+  'Saudi Arabia': '🇸🇦',
+  'Unknown': '🌍',
+  'Local': '🏠'
 };
 
 const InteractiveWorldMap: React.FC<WorldMapProps> = ({ data, totalClicks }) => {
+  const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
 
-  // Convert data to the format expected by react-svg-worldmap
-  const mapData = Object.entries(data)
-    .map(([country, clicks]) => {
-      const countryCode = countryCodeMap[country];
-      if (!countryCode || clicks === 0) return null;
-      return {
-        country: countryCode,
-        value: clicks
-      };
-    })
-    .filter(Boolean) as Array<{ country: string; value: number }>;
+  const sortedCountries = Object.entries(data)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 10);
 
   const maxClicks = Math.max(...Object.values(data));
 
-  const getColor = (value: number) => {
-    const ratio = value / maxClicks;
-    if (ratio > 0.7) return '#22c55e'; // green-500 (most users)
-    if (ratio > 0.4) return '#84cc16'; // lime-500 (high users)
-    if (ratio > 0.2) return '#eab308'; // yellow-500 (medium users)
-    return '#ef4444'; // red-500 (least users)
+  const getColor = (clicks: number) => {
+    const ratio = clicks / maxClicks;
+    if (ratio > 0.7) return 'bg-green-500'; // most users
+    if (ratio > 0.4) return 'bg-lime-500'; // high users
+    if (ratio > 0.2) return 'bg-yellow-500'; // medium users
+    return 'bg-red-500'; // least users
   };
 
   return (
     <div className="w-full h-96 bg-gray-900 rounded-xl overflow-hidden border border-gray-700 relative">
-      <div className="w-full h-full p-4">
-        <WorldMap
-          color="#374151"
-          title=""
-          value-suffix="clicks"
-          size="responsive"
-          data={mapData}
-          backgroundColor="#1f2937"
-          strokeOpacity={0.3}
-          borderColor="#4b5563"
-          tooltipBgColor="#1f2937"
-          tooltipTextColor="#ffffff"
-          richInteraction
-          styleFunction={(context: any) => {
-            const { countryValue } = context;
-            return {
-              fill: countryValue ? getColor(countryValue) : '#374151',
-              fillOpacity: countryValue ? 0.8 : 0.3,
-              stroke: '#4b5563',
-              strokeWidth: 1,
-              strokeOpacity: 0.5,
-              cursor: 'pointer'
-            };
-          }}
-        />
+      {/* Simple World Map Visualization */}
+      <div className="w-full h-full p-6 flex items-center justify-center">
+        <div className="text-center">
+          <div className="mb-6">
+            <h3 className="text-xl font-semibold text-white mb-2">Global User Distribution</h3>
+            <p className="text-gray-400 text-sm">Click data from {Object.keys(data).length} countries</p>
+          </div>
+
+          {/* World Icon with Stats */}
+          <div className="relative mb-6">
+            <div className="w-32 h-32 mx-auto bg-gray-800 rounded-full flex items-center justify-center border-4 border-gray-700">
+              <div className="text-center">
+                <div className="text-4xl mb-1">🌍</div>
+                <div className="text-lg font-bold text-white">{totalClicks.toLocaleString()}</div>
+                <div className="text-xs text-gray-400">Total Clicks</div>
+              </div>
+            </div>
+
+            {/* Animated Rings */}
+            <div className="absolute inset-0 rounded-full border-2 border-blue-500/30 animate-ping"></div>
+            <div className="absolute inset-2 rounded-full border-2 border-green-500/20 animate-ping" style={{ animationDelay: '0.5s' }}></div>
+          </div>
+
+          {/* Top Countries Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-w-md mx-auto">
+            {sortedCountries.slice(0, 6).map(([country, clicks]) => (
+              <div
+                key={country}
+                className="bg-gray-800/50 border border-gray-700 rounded-lg p-3 hover:bg-gray-800/70 transition-colors cursor-pointer"
+                onMouseEnter={() => setHoveredCountry(country)}
+                onMouseLeave={() => setHoveredCountry(null)}
+              >
+                <div className="text-center">
+                  <div className="text-2xl mb-1">{countryFlags[country] || '🌍'}</div>
+                  <div className="text-sm font-semibold text-white truncate">{country}</div>
+                  <div className="text-xs text-gray-400">{clicks.toLocaleString()}</div>
+                  <div className={`w-full h-1 rounded-full mt-2 ${getColor(clicks)}`}></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Legend */}
@@ -188,6 +151,13 @@ const InteractiveWorldMap: React.FC<WorldMapProps> = ({ data, totalClicks }) => 
           <div className="text-gray-300 text-xs">{totalClicks.toLocaleString()} Total Clicks</div>
         </div>
       </div>
+
+      {/* Hover Tooltip */}
+      {hoveredCountry && (
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm border border-gray-600 shadow-lg pointer-events-none z-10">
+          {hoveredCountry}: {data[hoveredCountry]?.toLocaleString()} clicks
+        </div>
+      )}
     </div>
   );
 };
