@@ -1,15 +1,22 @@
 [variables]
 NODE_VERSION = "18"
+PORT = "3001"
 
 [phases.setup]
 nixPkgs = ["nodejs-18_x", "npm-9_x"]
 
 [phases.install]
-cmds = ["npm ci"]
+cmds = [
+  "npm ci",
+  "cd server && npm ci"
+]
 
 [phases.build]
 dependsOn = ["install"]
-cmds = ["npm run build"]
+cmds = [
+  "npm run build",
+  "cd server && npm run build"
+]
 
 [start]
-cmd = "node server.js"
+cmd = "node server/dist/server.js"

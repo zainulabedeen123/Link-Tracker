@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getLinkByShortCode, trackClick } from '../lib/api';
-import { trackLinkClick } from '../lib/tracking';
 import { Link as LinkIcon, ExternalLink } from 'lucide-react';
 
 const Redirect: React.FC = () => {
@@ -19,24 +17,33 @@ const Redirect: React.FC = () => {
       }
 
       try {
-        // Get the link from our database
-        const foundLink = await getLinkByShortCode(shortCode);
-        
-        if (!foundLink) {
+        // Call our backend API to get link data and track the click
+        const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+        const response = await fetch(`${API_BASE_URL}/r/${shortCode}`, {
+          headers: {
+            'x-session-id': `session_${Math.random().toString(36).substring(2, 15)}`
+          }
+        });
+
+        if (!response.ok) {
           setError('Link not found or has expired');
           setLoading(false);
           return;
         }
 
-        setLink(foundLink);
+        const data = await response.json();
 
-        // Track the click
-        const clickData = await trackLinkClick(shortCode);
-        await trackClick(foundLink.id, clickData);
+        if (!data.success) {
+          setError(data.error || 'Link not found');
+          setLoading(false);
+          return;
+        }
+
+        setLink(data);
 
         // Redirect after a short delay to ensure tracking completes
         setTimeout(() => {
-          window.location.href = foundLink.originalUrl;
+          window.location.href = data.originalUrl;
         }, 500);
 
       } catch (error) {
@@ -91,6 +98,9 @@ const Redirect: React.FC = () => {
         <h1 className="text-2xl font-bold mb-4">Redirecting to:</h1>
         <div className="bg-gray-800 rounded-lg p-4 mb-6">
           <p className="text-blue-400 break-all">{link?.originalUrl}</p>
+          {link?.title && (
+            <p className="text-gray-300 text-sm mt-2">{link.title}</p>
+          )}
         </div>
         <p className="text-gray-400 text-sm mb-4">
           If you're not redirected automatically, click the button below:
