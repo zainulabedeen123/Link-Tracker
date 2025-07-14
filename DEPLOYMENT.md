@@ -2,8 +2,20 @@
 
 ## Prerequisites
 - Coolify instance running on your Hostinger VPS
-- GitHub repository access
+- GitHub repository access (make repository public or configure GitHub token)
 - Clerk account with publishable key
+
+## 🚨 Fix GitHub Access Issue
+
+The error `fatal: could not read Username for 'https://github.com'` means Coolify can't access your repository.
+
+### Option 1: Make Repository Public (Recommended)
+1. Go to https://github.com/zainulabedeen123/Link-Tracker
+2. Settings → Danger Zone → Change repository visibility → Make public
+
+### Option 2: Configure GitHub Token
+1. In Coolify: Sources → Add GitHub account
+2. Generate Personal Access Token with repo permissions
 
 ## Deployment Steps
 
@@ -11,25 +23,26 @@
 Set the following environment variables in Coolify:
 
 ```
-VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key_here
+VITE_CLERK_PUBLISHABLE_KEY=pk_test_Y3V0ZS10dXJ0bGUtMjYuY2xlcmsuYWNjb3VudHMuZGV2JA
 ```
 
-### 2. Coolify Configuration
-- **Build Command**: `npm run build`
-- **Start Command**: Not needed (uses Dockerfile)
-- **Port**: 80 (internal container port)
+### 2. Coolify Configuration (Nixpacks)
+- **Build Pack**: Nixpacks
+- **Build Command**: `npm run build` (auto-detected)
+- **Start Command**: `npm start` (auto-detected)
+- **Port**: 3000 (or auto-detected from $PORT)
 - **Health Check**: `/` (root path)
 
-### 3. Docker Configuration
+### 3. Nixpacks Configuration
 The project includes:
-- `Dockerfile` - Multi-stage build with Nginx
-- `nginx.conf` - Optimized Nginx configuration
-- `.dockerignore` - Build optimization
+- `nixpacks.toml` - Nixpacks build configuration
+- `server.js` - Express server for production
+- Automatic Node.js 18 detection
 
-### 4. Build Process
+### 4. Build Process (Nixpacks)
 1. Install dependencies with `npm ci`
 2. Build React app with `npm run build`
-3. Serve with Nginx on port 80
+3. Serve with Express server on $PORT
 
 ### 5. Features Included
 - ✅ Gzip compression
