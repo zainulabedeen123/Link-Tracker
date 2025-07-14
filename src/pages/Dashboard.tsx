@@ -380,6 +380,7 @@ const Dashboard: React.FC = () => {
                         <ExternalLink className="w-4 h-4" />
                       </button>
                       <button
+                        onClick={() => navigate(`/analytics/${link.id}`)}
                         className="p-2 bg-gray-600 hover:bg-gray-700 rounded-lg transition-colors"
                         title="View analytics"
                       >

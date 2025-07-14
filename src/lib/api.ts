@@ -122,6 +122,26 @@ export const trackClick = async (linkId: string, clickData: Partial<Click>): Pro
   console.log('Click tracking handled by backend');
 };
 
+export const getLinkById = async (linkId: string, userId: string): Promise<Link | null> => {
+  try {
+    setCurrentUserId(userId);
+    const response = await apiRequest(`/links/${linkId}`);
+
+    if (response.success && response.link) {
+      return {
+        ...response.link,
+        createdAt: new Date(response.link.createdAt),
+        updatedAt: new Date(response.link.updatedAt),
+        expiresAt: response.link.expiresAt ? new Date(response.link.expiresAt) : undefined
+      };
+    }
+    return null;
+  } catch (error) {
+    console.error('Error fetching link:', error);
+    return null;
+  }
+};
+
 export const getLinkAnalytics = async (linkId: string, userId: string) => {
   try {
     setCurrentUserId(userId);
