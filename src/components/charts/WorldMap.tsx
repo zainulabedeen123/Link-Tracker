@@ -1,209 +1,162 @@
-import React, { useState } from 'react';
-import {
-  ComposableMap,
-  Geographies,
-  Geography,
-  Marker,
-  ZoomableGroup
-} from 'react-simple-maps';
+import React from 'react';
+import WorldMap from 'react-svg-worldmap';
 
 interface WorldMapProps {
   data: Record<string, number>;
   totalClicks: number;
 }
 
-// Country coordinates for markers
-const countryCoordinates: Record<string, [number, number]> = {
-  'United States': [-95.7129, 37.0902],
-  'United Kingdom': [-3.4360, 55.3781],
-  'Germany': [10.4515, 51.1657],
-  'France': [2.2137, 46.2276],
-  'Japan': [138.2529, 36.2048],
-  'Australia': [133.7751, -25.2744],
-  'Canada': [-106.3468, 56.1304],
-  'India': [78.9629, 20.5937],
-  'Brazil': [-51.9253, -14.2350],
-  'China': [104.1954, 35.8617],
-  'Russia': [105.3188, 61.5240],
-  'Italy': [12.5674, 41.8719],
-  'Spain': [-3.7492, 40.4637],
-  'Netherlands': [5.2913, 52.1326],
-  'Sweden': [18.6435, 60.1282],
-  'Norway': [8.4689, 60.4720],
-  'Denmark': [9.5018, 56.2639],
-  'Finland': [25.7482, 61.9241],
-  'Switzerland': [8.2275, 46.8182],
-  'Austria': [14.5501, 47.5162],
-  'Belgium': [4.4699, 50.5039],
-  'Portugal': [-8.2245, 39.3999],
-  'Poland': [19.1343, 51.9194],
-  'Czech Republic': [15.4730, 49.8175],
-  'Hungary': [19.5033, 47.1625],
-  'Greece': [21.8243, 39.0742],
-  'Turkey': [35.2433, 38.9637],
-  'South Korea': [127.7669, 35.9078],
-  'Singapore': [103.8198, 1.3521],
-  'Thailand': [100.9925, 15.8700],
-  'Vietnam': [108.2772, 14.0583],
-  'Philippines': [121.7740, 12.8797],
-  'Indonesia': [113.9213, -0.7893],
-  'Malaysia': [101.9758, 4.2105],
-  'Mexico': [-102.5528, 23.6345],
-  'Argentina': [-63.6167, -38.4161],
-  'Chile': [-71.5430, -35.6751],
-  'Colombia': [-74.2973, 4.5709],
-  'Peru': [-75.0152, -9.1900],
-  'South Africa': [22.9375, -30.5595],
-  'Egypt': [30.8025, 26.8206],
-  'Nigeria': [8.6753, 9.0820],
-  'Kenya': [37.9062, -0.0236],
-  'Morocco': [-7.0926, 31.7917],
-  'Israel': [34.8516, 32.4279],
-  'UAE': [53.8478, 23.4241],
-  'Saudi Arabia': [45.0792, 23.8859],
+// Country code mapping for react-svg-worldmap
+const countryCodeMap: Record<string, string> = {
+  'United States': 'US',
+  'United Kingdom': 'GB',
+  'Germany': 'DE',
+  'France': 'FR',
+  'Japan': 'JP',
+  'Australia': 'AU',
+  'Canada': 'CA',
+  'India': 'IN',
+  'Brazil': 'BR',
+  'China': 'CN',
+  'Russia': 'RU',
+  'Italy': 'IT',
+  'Spain': 'ES',
+  'Netherlands': 'NL',
+  'Sweden': 'SE',
+  'Norway': 'NO',
+  'Denmark': 'DK',
+  'Finland': 'FI',
+  'Switzerland': 'CH',
+  'Austria': 'AT',
+  'Belgium': 'BE',
+  'Portugal': 'PT',
+  'Poland': 'PL',
+  'Czech Republic': 'CZ',
+  'Hungary': 'HU',
+  'Greece': 'GR',
+  'Turkey': 'TR',
+  'South Korea': 'KR',
+  'Singapore': 'SG',
+  'Thailand': 'TH',
+  'Vietnam': 'VN',
+  'Philippines': 'PH',
+  'Indonesia': 'ID',
+  'Malaysia': 'MY',
+  'Mexico': 'MX',
+  'Argentina': 'AR',
+  'Chile': 'CL',
+  'Colombia': 'CO',
+  'Peru': 'PE',
+  'South Africa': 'ZA',
+  'Egypt': 'EG',
+  'Nigeria': 'NG',
+  'Kenya': 'KE',
+  'Morocco': 'MA',
+  'Israel': 'IL',
+  'UAE': 'AE',
+  'Saudi Arabia': 'SA',
+  'Ireland': 'IE',
+  'Scotland': 'GB',
+  'Wales': 'GB',
+  'Iceland': 'IS',
+  'Luxembourg': 'LU',
+  'Slovenia': 'SI',
+  'Slovakia': 'SK',
+  'Croatia': 'HR',
+  'Serbia': 'RS',
+  'Bulgaria': 'BG',
+  'Romania': 'RO',
+  'Lithuania': 'LT',
+  'Latvia': 'LV',
+  'Estonia': 'EE',
+  'Malta': 'MT',
+  'Cyprus': 'CY',
+  'Taiwan': 'TW',
+  'Hong Kong': 'HK',
+  'Macau': 'MO',
+  'Mongolia': 'MN',
+  'Kazakhstan': 'KZ',
+  'Uzbekistan': 'UZ',
+  'Pakistan': 'PK',
+  'Bangladesh': 'BD',
+  'Sri Lanka': 'LK',
+  'Myanmar': 'MM',
+  'Cambodia': 'KH',
+  'Laos': 'LA',
+  'Nepal': 'NP',
+  'Bhutan': 'BT',
+  'Maldives': 'MV',
+  'Iran': 'IR',
+  'Iraq': 'IQ',
+  'Jordan': 'JO',
+  'Lebanon': 'LB',
+  'Syria': 'SY',
+  'Kuwait': 'KW',
+  'Qatar': 'QA',
+  'Bahrain': 'BH',
+  'Oman': 'OM',
+  'Yemen': 'YE',
+  'Algeria': 'DZ',
+  'Tunisia': 'TN',
+  'Libya': 'LY',
+  'Sudan': 'SD',
+  'Ethiopia': 'ET',
+  'Ghana': 'GH',
+  'New Zealand': 'NZ',
 };
 
-const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@3/countries-110m.json";
+const InteractiveWorldMap: React.FC<WorldMapProps> = ({ data, totalClicks }) => {
 
-const WorldMap: React.FC<WorldMapProps> = ({ data, totalClicks }) => {
-  const [tooltipContent, setTooltipContent] = useState('');
-  const [position, setPosition] = useState({ coordinates: [0, 0], zoom: 1 });
+  // Convert data to the format expected by react-svg-worldmap
+  const mapData = Object.entries(data)
+    .map(([country, clicks]) => {
+      const countryCode = countryCodeMap[country];
+      if (!countryCode || clicks === 0) return null;
+      return {
+        country: countryCode,
+        value: clicks
+      };
+    })
+    .filter(Boolean) as Array<{ country: string; value: number }>;
 
   const maxClicks = Math.max(...Object.values(data));
 
-  const getMarkerSize = (clicks: number) => {
-    const minSize = 4;
-    const maxSize = 20;
-    const ratio = clicks / maxClicks;
-    return minSize + (maxSize - minSize) * ratio;
-  };
-
-  const getMarkerColor = (clicks: number) => {
-    const ratio = clicks / maxClicks;
+  const getColor = (value: number) => {
+    const ratio = value / maxClicks;
     if (ratio > 0.7) return '#22c55e'; // green-500 (most users)
     if (ratio > 0.4) return '#84cc16'; // lime-500 (high users)
     if (ratio > 0.2) return '#eab308'; // yellow-500 (medium users)
     return '#ef4444'; // red-500 (least users)
-  };
-
-  const getCountryFillColor = (countryName: string, clicks: number) => {
-    if (clicks === 0) return '#1f2937'; // gray-800 (no data)
-    const ratio = clicks / maxClicks;
-    if (ratio > 0.7) return '#22c55e'; // green-500 (most users)
-    if (ratio > 0.4) return '#84cc16'; // lime-500 (high users)
-    if (ratio > 0.2) return '#eab308'; // yellow-500 (medium users)
-    return '#ef4444'; // red-500 (least users)
-  };
-
-  const handleMoveEnd = (position: any) => {
-    setPosition(position);
   };
 
   return (
-    <div className="w-full h-96 bg-gray-900 rounded-xl overflow-hidden border border-gray-700">
-      <ComposableMap
-        projection="geoMercator"
-        projectionConfig={{
-          scale: 100,
-          center: [0, 20]
-        }}
-        style={{
-          width: "100%",
-          height: "100%"
-        }}
-      >
-        <ZoomableGroup
-          zoom={position.zoom}
-          center={position.coordinates as [number, number]}
-          onMoveEnd={handleMoveEnd}
-          minZoom={0.5}
-          maxZoom={8}
-        >
-          <Geographies geography={geoUrl}>
-            {({ geographies }) =>
-              geographies.map((geo) => {
-                const countryName = geo.properties.NAME;
-                const clicks = data[countryName] || 0;
-                const hasData = clicks > 0;
-
-                return (
-                  <Geography
-                    key={geo.rsmKey}
-                    geography={geo}
-                    onMouseEnter={() => {
-                      setTooltipContent(`${countryName}: ${clicks} clicks`);
-                    }}
-                    onMouseLeave={() => {
-                      setTooltipContent('');
-                    }}
-                    style={{
-                      default: {
-                        fill: hasData ? getCountryFillColor(countryName, clicks) : '#374151',
-                        outline: 'none',
-                        stroke: '#4b5563',
-                        strokeWidth: 0.5,
-                        opacity: hasData ? 0.8 : 0.3,
-                      },
-                      hover: {
-                        fill: hasData ? getCountryFillColor(countryName, clicks) : '#4b5563',
-                        outline: 'none',
-                        stroke: '#6b7280',
-                        strokeWidth: 1,
-                        opacity: 1,
-                      },
-                      pressed: {
-                        fill: hasData ? getCountryFillColor(countryName, clicks) : '#6b7280',
-                        outline: 'none',
-                        opacity: 1,
-                      },
-                    }}
-                  />
-                );
-              })
-            }
-          </Geographies>
-
-          {/* Markers for countries with data */}
-          {Object.entries(data).map(([country, clicks]) => {
-            const coordinates = countryCoordinates[country];
-            if (!coordinates || clicks === 0) return null;
-
-            return (
-              <Marker key={country} coordinates={coordinates}>
-                <circle
-                  r={getMarkerSize(clicks)}
-                  fill={getMarkerColor(clicks)}
-                  stroke="#ffffff"
-                  strokeWidth={2}
-                  style={{
-                    cursor: 'pointer',
-                    filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))',
-                  }}
-                  onMouseEnter={() => {
-                    setTooltipContent(`${country}: ${clicks.toLocaleString()} clicks`);
-                  }}
-                  onMouseLeave={() => {
-                    setTooltipContent('');
-                  }}
-                />
-                <circle
-                  r={getMarkerSize(clicks) + 5}
-                  fill={getMarkerColor(clicks)}
-                  opacity={0.3}
-                  className="animate-ping"
-                />
-              </Marker>
-            );
-          })}
-        </ZoomableGroup>
-      </ComposableMap>
-
-      {/* Tooltip */}
-      {tooltipContent && (
-        <div className="absolute top-4 left-4 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm border border-gray-600 shadow-lg">
-          {tooltipContent}
-        </div>
-      )}
+    <div className="w-full h-96 bg-gray-900 rounded-xl overflow-hidden border border-gray-700 relative">
+      <div className="w-full h-full p-4">
+        <WorldMap
+          color="#374151"
+          title=""
+          value-suffix="clicks"
+          size="responsive"
+          data={mapData}
+          backgroundColor="#1f2937"
+          strokeOpacity={0.3}
+          borderColor="#4b5563"
+          tooltipBgColor="#1f2937"
+          tooltipTextColor="#ffffff"
+          richInteraction
+          styleFunction={(context: any) => {
+            const { countryValue } = context;
+            return {
+              fill: countryValue ? getColor(countryValue) : '#374151',
+              fillOpacity: countryValue ? 0.8 : 0.3,
+              stroke: '#4b5563',
+              strokeWidth: 1,
+              strokeOpacity: 0.5,
+              cursor: 'pointer'
+            };
+          }}
+        />
+      </div>
 
       {/* Legend */}
       <div className="absolute bottom-4 right-4 bg-gray-800/90 backdrop-blur-sm rounded-lg p-3 border border-gray-600">
@@ -228,23 +181,15 @@ const WorldMap: React.FC<WorldMapProps> = ({ data, totalClicks }) => {
         </div>
       </div>
 
-      {/* Zoom Controls */}
-      <div className="absolute top-4 right-4 flex flex-col gap-1">
-        <button
-          onClick={() => setPosition(prev => ({ ...prev, zoom: Math.min(prev.zoom * 1.5, 8) }))}
-          className="w-8 h-8 bg-gray-800/90 hover:bg-gray-700 text-white rounded border border-gray-600 flex items-center justify-center text-sm font-bold shadow-sm"
-        >
-          +
-        </button>
-        <button
-          onClick={() => setPosition(prev => ({ ...prev, zoom: Math.max(prev.zoom / 1.5, 0.5) }))}
-          className="w-8 h-8 bg-gray-800/90 hover:bg-gray-700 text-white rounded border border-gray-600 flex items-center justify-center text-sm font-bold shadow-sm"
-        >
-          −
-        </button>
+      {/* Stats Summary */}
+      <div className="absolute top-4 left-4 bg-gray-800/90 backdrop-blur-sm rounded-lg p-3 border border-gray-600">
+        <div className="text-white text-sm">
+          <div className="font-semibold">{Object.keys(data).length} Countries</div>
+          <div className="text-gray-300 text-xs">{totalClicks.toLocaleString()} Total Clicks</div>
+        </div>
       </div>
     </div>
   );
 };
 
-export default WorldMap;
+export default InteractiveWorldMap;

@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Progress } from '../ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import CountryFlag from '../ui/country-flag';
-import WorldMap from './WorldMap';
+import InteractiveWorldMap from './WorldMap';
 
 interface CountryChartProps {
   data: Record<string, number>;
@@ -23,7 +23,7 @@ const CountryChart: React.FC<CountryChartProps> = ({ data, totalClicks }) => {
     <div className="space-y-8">
       {/* Interactive World Map */}
       <div className="mb-8">
-        <WorldMap data={data} totalClicks={totalClicks} />
+        <InteractiveWorldMap data={data} totalClicks={totalClicks} />
       </div>
 
       {/* Top Countries List */}
@@ -54,7 +54,6 @@ const CountryChart: React.FC<CountryChartProps> = ({ data, totalClicks }) => {
 
                 <Progress
                   value={progressValue}
-                  className="h-2 bg-gray-700"
                 />
               </div>
             );

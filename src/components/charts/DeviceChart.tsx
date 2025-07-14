@@ -2,6 +2,7 @@ import React from 'react';
 import { Smartphone, Monitor, Tablet, Laptop } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Progress } from '../ui/progress';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
 interface DeviceChartProps {
   data: Record<string, number>;
@@ -22,6 +23,21 @@ const DeviceChart: React.FC<DeviceChartProps> = ({ data, totalClicks }) => {
     'Tablet': 'from-purple-500 to-violet-600',
     'Laptop': 'from-orange-500 to-amber-600',
   };
+
+  const pieColors: Record<string, string> = {
+    'Mobile': '#22c55e',
+    'Desktop': '#3b82f6',
+    'Tablet': '#8b5cf6',
+    'Laptop': '#f97316',
+  };
+
+  // Prepare data for pie chart
+  const pieData = sortedDevices.map(([device, clicks]) => ({
+    name: device,
+    value: clicks,
+    percentage: ((clicks / totalClicks) * 100).toFixed(1),
+    color: pieColors[device] || '#6b7280'
+  }));
 
   const sortedDevices = Object.entries(data)
     .sort(([, a], [, b]) => b - a);
@@ -57,7 +73,6 @@ const DeviceChart: React.FC<DeviceChartProps> = ({ data, totalClicks }) => {
 
               <Progress
                 value={progressValue}
-                className="h-3 bg-gray-700"
               />
             </div>
           );
@@ -66,41 +81,38 @@ const DeviceChart: React.FC<DeviceChartProps> = ({ data, totalClicks }) => {
 
       {/* Donut Chart Visualization */}
       <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
-        <h4 className="text-lg font-semibold mb-6 text-center">Device Distribution</h4>
-        
-        {/* Simple Donut Chart using CSS */}
-        <div className="relative w-48 h-48 mx-auto mb-6">
-          <div className="absolute inset-0 rounded-full bg-gray-700"></div>
-          
-          {/* Center Circle */}
-          <div className="absolute inset-8 rounded-full bg-gray-900 flex items-center justify-center">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-white">{totalClicks}</div>
-              <div className="text-xs text-gray-400">Total Clicks</div>
-            </div>
-          </div>
-          
-          {/* Segments */}
-          {sortedDevices.map(([device, clicks], index) => {
-            const percentage = (clicks / totalClicks) * 100;
-            const rotation = sortedDevices.slice(0, index).reduce((acc, [, c]) => acc + (c / totalClicks) * 360, 0);
-            
-            return (
-              <div
-                key={device}
-                className={`absolute inset-0 rounded-full`}
-                style={{
-                  background: `conic-gradient(from ${rotation}deg, transparent ${rotation}deg, var(--tw-gradient-from) ${rotation}deg, var(--tw-gradient-to) ${rotation + (percentage * 3.6)}deg, transparent ${rotation + (percentage * 3.6)}deg)`,
-                  '--tw-gradient-from': deviceColors[device]?.includes('green') ? '#10b981' : 
-                                       deviceColors[device]?.includes('blue') ? '#3b82f6' :
-                                       deviceColors[device]?.includes('purple') ? '#8b5cf6' : '#f59e0b',
-                  '--tw-gradient-to': deviceColors[device]?.includes('green') ? '#059669' : 
-                                     deviceColors[device]?.includes('blue') ? '#1d4ed8' :
-                                     deviceColors[device]?.includes('purple') ? '#7c3aed' : '#d97706',
-                } as React.CSSProperties}
+        <h4 className="text-lg font-semibold mb-6 text-center text-white">Device Distribution</h4>
+
+        <div className="h-64 w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={pieData}
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={100}
+                paddingAngle={2}
+                dataKey="value"
+              >
+                {pieData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} />
+                ))}
+              </Pie>
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: '#1f2937',
+                  border: '1px solid #374151',
+                  borderRadius: '8px',
+                  color: '#ffffff'
+                }}
+                formatter={(value: any, name: any) => [
+                  `${value} clicks (${pieData.find(d => d.name === name)?.percentage}%)`,
+                  name
+                ]}
               />
-            );
-          })}
+            </PieChart>
+          </ResponsiveContainer>
         </div>
 
         {/* Legend */}

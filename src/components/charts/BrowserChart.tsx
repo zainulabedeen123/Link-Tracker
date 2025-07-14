@@ -57,7 +57,6 @@ const BrowserChart: React.FC<BrowserChartProps> = ({ data, totalClicks }) => {
 
             <Progress
               value={progressValue}
-              className="h-2 bg-gray-700"
             />
           </div>
         );
