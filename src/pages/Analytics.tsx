@@ -4,7 +4,7 @@ import { useUser } from '@clerk/clerk-react';
 import {
   ArrowLeft, Globe, Smartphone, Monitor, Calendar, Clock,
   TrendingUp, Users, Eye, MousePointer, MapPin, Wifi,
-  Chrome, Firefox, Safari, Zap, BarChart3, PieChart
+  Zap, BarChart3, PieChart
 } from 'lucide-react';
 import { getLinkAnalytics, getLinkById } from '../lib/api';
 import { Link } from '../types/database';

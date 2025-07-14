@@ -1,5 +1,5 @@
 import React from 'react';
-import { Chrome, Firefox, Safari, Globe } from 'lucide-react';
+import { Globe } from 'lucide-react';
 
 interface BrowserChartProps {
   data: Record<string, number>;
@@ -8,9 +8,9 @@ interface BrowserChartProps {
 
 const BrowserChart: React.FC<BrowserChartProps> = ({ data, totalClicks }) => {
   const browserIcons: Record<string, React.ReactNode> = {
-    'Chrome': <Chrome className="w-5 h-5" />,
-    'Firefox': <Firefox className="w-5 h-5" />,
-    'Safari': <Safari className="w-5 h-5" />,
+    'Chrome': <Globe className="w-5 h-5" />,
+    'Firefox': <Globe className="w-5 h-5" />,
+    'Safari': <Globe className="w-5 h-5" />,
     'Edge': <Globe className="w-5 h-5" />,
     'Opera': <Globe className="w-5 h-5" />,
   };
@@ -21,6 +21,7 @@ const BrowserChart: React.FC<BrowserChartProps> = ({ data, totalClicks }) => {
     'Safari': 'from-blue-400 to-cyan-500',
     'Edge': 'from-blue-600 to-indigo-700',
     'Opera': 'from-red-500 to-pink-600',
+    'Unknown': 'from-gray-500 to-gray-600',
   };
 
   const sortedBrowsers = Object.entries(data)
