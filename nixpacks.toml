@@ -8,6 +8,7 @@ nixPkgs = ["nodejs-18_x", "npm-9_x"]
 cmds = ["npm ci"]
 
 [phases.build]
+dependsOn = ["install"]
 cmds = ["npm run build"]
 
 [start]

@@ -4,11 +4,19 @@ import { ClerkProvider } from '@clerk/clerk-react'
 import App from './App.tsx'
 import './index.css'
 
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+// Try to get the publishable key from build-time environment
+let PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+
+// Fallback: If not available at build time, use the hardcoded key for now
+if (!PUBLISHABLE_KEY) {
+  PUBLISHABLE_KEY = 'pk_test_Y3V0ZS10dXJ0bGUtMjYuY2xlcmsuYWNjb3VudHMuZGV2JA';
+  console.warn('Using fallback Clerk key - environment variable not available at build time');
+}
 
 // Debug logging
 console.log('Environment check:', {
   PUBLISHABLE_KEY: PUBLISHABLE_KEY ? 'Set' : 'Missing',
+  SOURCE: import.meta.env.VITE_CLERK_PUBLISHABLE_KEY ? 'Environment' : 'Fallback',
   NODE_ENV: import.meta.env.MODE,
   ALL_ENV: import.meta.env
 });
