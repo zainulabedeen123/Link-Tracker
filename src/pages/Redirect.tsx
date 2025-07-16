@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Link as LinkIcon, ExternalLink } from 'lucide-react';
+import EmailCollectionPopup from '../components/EmailCollectionPopup';
 
 const Redirect: React.FC = () => {
   const { shortCode } = useParams<{ shortCode: string }>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [link, setLink] = useState<any>(null);
+  const [showEmailPopup, setShowEmailPopup] = useState(false);
+  const [submittingEmail, setSubmittingEmail] = useState(false);
 
   useEffect(() => {
     const handleRedirect = async () => {
@@ -41,10 +44,8 @@ const Redirect: React.FC = () => {
 
         setLink(data);
 
-        // Redirect after a short delay to ensure tracking completes
-        setTimeout(() => {
-          window.location.href = data.originalUrl;
-        }, 500);
+        // Show email collection popup instead of immediate redirect
+        setShowEmailPopup(true);
 
       } catch (error) {
         console.error('Redirect error:', error);
@@ -55,6 +56,56 @@ const Redirect: React.FC = () => {
 
     handleRedirect();
   }, [shortCode]);
+
+  const handleEmailSubmit = async (email: string, name: string) => {
+    if (!link) return;
+
+    try {
+      setSubmittingEmail(true);
+
+      // Submit email capture to backend
+      const BASE_URL = import.meta.env.PROD ? '' : 'http://localhost:3001';
+      await fetch(`${BASE_URL}/api/email-capture`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          linkId: link.linkId,
+          shortCode: shortCode,
+          email,
+          name,
+          userAgent: navigator.userAgent,
+          referrer: document.referrer || 'direct',
+          timestamp: new Date().toISOString()
+        })
+      });
+
+      // Close popup and redirect
+      setShowEmailPopup(false);
+
+      // Small delay for better UX
+      setTimeout(() => {
+        window.location.href = link.originalUrl;
+      }, 500);
+
+    } catch (err) {
+      console.error('Error submitting email:', err);
+      // Even if email submission fails, still redirect
+      setShowEmailPopup(false);
+      setTimeout(() => {
+        window.location.href = link.originalUrl;
+      }, 500);
+    } finally {
+      setSubmittingEmail(false);
+    }
+  };
+
+  const handleSkip = () => {
+    if (link) {
+      window.location.href = link.originalUrl;
+    }
+  };
 
   if (loading) {
     return (
@@ -103,15 +154,25 @@ const Redirect: React.FC = () => {
           )}
         </div>
         <p className="text-gray-400 text-sm mb-4">
-          If you're not redirected automatically, click the button below:
+          Please provide your details to continue
         </p>
-        <a
-          href={link?.originalUrl}
-          className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+        <button
+          onClick={handleSkip}
+          className="text-gray-500 hover:text-gray-300 text-sm underline transition-colors"
         >
-          Continue to Destination
-        </a>
+          Skip and continue directly
+        </button>
       </div>
+
+      {/* Email Collection Popup */}
+      <EmailCollectionPopup
+        isOpen={showEmailPopup}
+        onClose={handleSkip}
+        onSubmit={handleEmailSubmit}
+        targetUrl={link?.originalUrl || ''}
+        linkTitle={link?.title}
+        isLoading={submittingEmail}
+      />
     </div>
   );
 };

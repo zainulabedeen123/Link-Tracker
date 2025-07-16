@@ -13,6 +13,7 @@ import DeviceChart from '../components/charts/DeviceChart';
 import BrowserChart from '../components/charts/BrowserChart';
 import TimeChart from '../components/charts/TimeChart';
 import ActivityFeed from '../components/charts/ActivityFeed';
+import EmailCaptureChart from '../components/charts/EmailCaptureChart';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import '../styles/analytics.css';
 
@@ -27,6 +28,7 @@ interface AnalyticsData {
   clicksByDate: Record<string, number>;
   topReferrers: Array<{ domain: string; clicks: number }>;
   recentClicks: any[];
+  emailCaptures: number;
 }
 
 const Analytics: React.FC = () => {
@@ -179,13 +181,11 @@ const Analytics: React.FC = () => {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-400 text-sm font-medium">Click Rate</p>
-                  <p className="text-3xl font-bold text-white mt-1">
-                    {analytics.totalClicks > 0 ? ((analytics.uniqueClicks / analytics.totalClicks) * 100).toFixed(1) : 0}%
-                  </p>
+                  <p className="text-gray-400 text-sm font-medium">Email Captures</p>
+                  <p className="text-3xl font-bold text-white mt-1">{analytics.emailCaptures || 0}</p>
                 </div>
                 <div className="p-3 bg-orange-500/20 rounded-lg">
-                  <TrendingUp className="w-6 h-6 text-orange-400" />
+                  <Mail className="w-6 h-6 text-orange-400" />
                 </div>
               </div>
             </CardContent>
@@ -247,6 +247,14 @@ const Analytics: React.FC = () => {
               <TimeChart data={analytics.clicksByDate} totalClicks={analytics.totalClicks} />
             </CardContent>
           </Card>
+        </div>
+
+        {/* Email Captures */}
+        <div className="mb-8">
+          <EmailCaptureChart
+            linkId={analytics.linkId}
+            totalCaptures={analytics.emailCaptures || 0}
+          />
         </div>
 
         {/* Recent Activity */}

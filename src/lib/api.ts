@@ -152,3 +152,48 @@ export const getLinkAnalytics = async (linkId: string, userId: string) => {
     return null;
   }
 };
+
+// Email Capture Functions
+export interface EmailCaptureData {
+  linkId?: string;
+  shortCode: string;
+  email: string;
+  name: string;
+  userAgent?: string;
+  referrer?: string;
+  timestamp?: string;
+}
+
+export interface EmailCapture {
+  id: string;
+  email: string;
+  name: string;
+  userAgent?: string;
+  referrer?: string;
+  capturedAt: string;
+  ipAddress?: string;
+}
+
+export const submitEmailCapture = async (data: EmailCaptureData): Promise<{ success: boolean; message?: string; duplicate?: boolean }> => {
+  return await apiRequest('/email-capture', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  });
+};
+
+export const getEmailCaptures = async (linkId: string, page = 1, limit = 50): Promise<{
+  captures: EmailCapture[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+  };
+}> => {
+  const response = await apiRequest(`/email-capture/${linkId}?page=${page}&limit=${limit}`);
+  return response.data;
+};
+
+

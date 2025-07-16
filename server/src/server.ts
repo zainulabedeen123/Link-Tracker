@@ -7,6 +7,7 @@ import path from 'path';
 // Import routes
 import linksRouter from './routes/links';
 import redirectRouter from './routes/redirect';
+import emailCaptureRouter from './routes/emailCapture';
 
 // Load environment variables
 dotenv.config();
@@ -51,6 +52,7 @@ app.get('/health', (req, res) => {
 
 // API routes
 app.use('/api/links', linksRouter);
+app.use('/api/email-capture', emailCaptureRouter);
 
 // Redirect routes (for short links) - MUST come before static files
 app.use('/r', redirectRouter);
