@@ -11,13 +11,14 @@ class Database {
   private dbPath: string;
 
   constructor() {
-    // Create data directory if it doesn't exist
-    const dataDir = path.join(process.cwd(), 'data');
+    // Use persistent data directory from environment variable or default
+    const dataDir = process.env.DATA_DIR || path.join(process.cwd(), 'data');
     if (!fs.existsSync(dataDir)) {
       fs.mkdirSync(dataDir, { recursive: true });
     }
 
     this.dbPath = path.join(dataDir, 'trackerr.db');
+    console.log('Database will be stored at:', this.dbPath);
     this.db = new sqlite.Database(this.dbPath, (err) => {
       if (err) {
         console.error('Error opening database:', err);
