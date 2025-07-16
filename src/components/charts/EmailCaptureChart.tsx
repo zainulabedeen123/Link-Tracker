@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Mail, User, Calendar, Globe, Download, Eye, EyeOff } from 'lucide-react';
+import { User, Calendar, Globe, Download, Eye, EyeOff } from 'lucide-react';
+import { Mail } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { getEmailCaptures, EmailCapture } from '../../lib/api';
