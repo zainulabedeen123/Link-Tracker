@@ -20,13 +20,9 @@ const Redirect: React.FC = () => {
       }
 
       try {
-        // Call our backend API to get link data and track the click
-        const BASE_URL = import.meta.env.PROD ? '' : 'http://localhost:3001';
-        const response = await fetch(`${BASE_URL}/r/${shortCode}`, {
-          headers: {
-            'x-session-id': `session_${Math.random().toString(36).substring(2, 15)}`
-          }
-        });
+        // Get link data first (without tracking)
+        const BASE_URL = import.meta.env.PROD ? '/api' : 'http://localhost:3001/api';
+        const response = await fetch(`${BASE_URL}/links/by-code/${shortCode}`);
 
         if (!response.ok) {
           setError('Link not found or has expired');
@@ -35,6 +31,7 @@ const Redirect: React.FC = () => {
         }
 
         const data = await response.json();
+        console.log('Link data received:', data);
 
         if (!data.success) {
           setError(data.error || 'Link not found');
@@ -42,14 +39,25 @@ const Redirect: React.FC = () => {
           return;
         }
 
-        setLink(data);
+        // Set link data and track the click
+        setLink(data.link);
+
+        // Track the click now
+        await fetch(`${BASE_URL.replace('/api', '')}/r/${shortCode}`, {
+          headers: {
+            'x-session-id': `session_${Math.random().toString(36).substring(2, 15)}`
+          }
+        }).catch(err => console.log('Tracking error:', err));
+
+        setLoading(false);
 
         // Show email collection popup instead of immediate redirect
+        console.log('Showing email popup');
         setShowEmailPopup(true);
 
       } catch (error) {
         console.error('Redirect error:', error);
-        setError('Something went wrong');
+        setError('Failed to load link');
         setLoading(false);
       }
     };
@@ -71,7 +79,7 @@ const Redirect: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          linkId: link.linkId,
+          linkId: link.id,
           shortCode: shortCode,
           email,
           name,
@@ -165,6 +173,7 @@ const Redirect: React.FC = () => {
       </div>
 
       {/* Email Collection Popup */}
+      {console.log('Rendering popup with:', { showEmailPopup, link })}
       <EmailCollectionPopup
         isOpen={showEmailPopup}
         onClose={handleSkip}

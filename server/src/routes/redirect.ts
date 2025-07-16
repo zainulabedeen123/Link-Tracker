@@ -50,7 +50,8 @@ router.get('/:shortCode', async (req: Request, res: Response) => {
       success: true,
       originalUrl: link.originalUrl,
       title: link.title,
-      shortCode: link.shortCode
+      shortCode: link.shortCode,
+      linkId: link.id
     });
 
   } catch (error) {

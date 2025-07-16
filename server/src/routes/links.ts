@@ -99,4 +99,41 @@ router.get('/:id/analytics', async (req: Request, res: Response) => {
   }
 });
 
+// Get link by short code (for email collection page)
+router.get('/by-code/:shortCode', async (req: Request, res: Response) => {
+  try {
+    const { shortCode } = req.params;
+
+    const link = await linkService.getLinkByShortCode(shortCode);
+
+    if (!link) {
+      return res.status(404).json({
+        success: false,
+        error: 'Link not found'
+      });
+    }
+
+    // Check if link has expired
+    if (link.expiresAt && new Date() > link.expiresAt) {
+      return res.status(410).json({
+        success: false,
+        error: 'Link has expired'
+      });
+    }
+
+    res.json({
+      success: true,
+      link: {
+        id: link.id,
+        originalUrl: link.originalUrl,
+        title: link.title,
+        shortCode: link.shortCode
+      }
+    });
+  } catch (error) {
+    console.error('Error getting link by short code:', error);
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+});
+
 export default router;
