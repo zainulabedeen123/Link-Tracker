@@ -202,4 +202,70 @@ router.get('/:linkId', async (req: Request, res: Response) => {
   }
 });
 
+// GET /api/email-capture/user/:userId - Get all email captures for a user's links
+router.get('/user/:userId', async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const { page = 1, limit = 100 } = req.query;
+
+    const offset = (Number(page) - 1) * Number(limit);
+
+    const query = `
+      SELECT
+        ec.id,
+        ec.email,
+        ec.name,
+        ec.user_agent,
+        ec.referrer,
+        ec.captured_at,
+        ec.ip_address,
+        l.title as link_title,
+        l.short_code,
+        l.original_url
+      FROM email_captures ec
+      JOIN links l ON ec.link_id = l.id
+      WHERE l.user_id = ?
+      ORDER BY ec.captured_at DESC
+      LIMIT ? OFFSET ?
+    `;
+
+    const countQuery = `
+      SELECT COUNT(*) as total
+      FROM email_captures ec
+      JOIN links l ON ec.link_id = l.id
+      WHERE l.user_id = ?
+    `;
+
+    const [dataResult, countResult] = await Promise.all([
+      db.all(query, [userId, Number(limit), offset]),
+      db.get(countQuery, [userId])
+    ]);
+
+    const total = parseInt(countResult.total);
+    const totalPages = Math.ceil(total / Number(limit));
+
+    res.json({
+      success: true,
+      data: {
+        captures: dataResult,
+        pagination: {
+          page: Number(page),
+          limit: Number(limit),
+          total,
+          totalPages,
+          hasNext: Number(page) < totalPages,
+          hasPrev: Number(page) > 1
+        }
+      }
+    });
+
+  } catch (error) {
+    console.error('Get user email captures error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Internal server error'
+    });
+  }
+});
+
 export default router;

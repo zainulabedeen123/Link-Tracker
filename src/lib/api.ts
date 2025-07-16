@@ -196,4 +196,25 @@ export const getEmailCaptures = async (linkId: string, page = 1, limit = 50): Pr
   return response.data;
 };
 
+export interface UserEmailCapture extends EmailCapture {
+  linkTitle: string;
+  shortCode: string;
+  originalUrl: string;
+}
+
+export const getUserEmailCaptures = async (userId: string, page = 1, limit = 100): Promise<{
+  captures: UserEmailCapture[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+  };
+}> => {
+  const response = await apiRequest(`/email-capture/user/${userId}?page=${page}&limit=${limit}`);
+  return response.data;
+};
+
 

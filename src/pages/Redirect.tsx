@@ -51,9 +51,21 @@ const Redirect: React.FC = () => {
 
         setLoading(false);
 
-        // Show email collection popup instead of immediate redirect
-        console.log('Showing email popup');
-        setShowEmailPopup(true);
+        // Check if email was already captured for this link
+        const cacheKey = `email_captured_${shortCode}`;
+        const cachedEmail = localStorage.getItem(cacheKey);
+
+        if (cachedEmail) {
+          console.log('Email already captured, skipping popup');
+          // Redirect immediately if email was already captured
+          setTimeout(() => {
+            window.location.href = data.link.originalUrl;
+          }, 1000);
+        } else {
+          // Show email collection popup
+          console.log('Showing email popup');
+          setShowEmailPopup(true);
+        }
 
       } catch (error) {
         console.error('Redirect error:', error);
@@ -72,8 +84,10 @@ const Redirect: React.FC = () => {
       setSubmittingEmail(true);
 
       // Submit email capture to backend
-      const BASE_URL = import.meta.env.PROD ? '' : 'http://localhost:3001';
-      await fetch(`${BASE_URL}/api/email-capture`, {
+      const BASE_URL = import.meta.env.PROD ? '/api' : 'http://localhost:3001/api';
+      console.log('Submitting email capture:', { linkId: link.id, email, name });
+
+      const response = await fetch(`${BASE_URL}/email-capture`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -88,6 +102,22 @@ const Redirect: React.FC = () => {
           timestamp: new Date().toISOString()
         })
       });
+
+      const result = await response.json();
+      console.log('Email capture response:', result);
+
+      if (response.ok && result.success) {
+        // Store email in localStorage to prevent showing popup again
+        const cacheKey = `email_captured_${shortCode}`;
+        localStorage.setItem(cacheKey, JSON.stringify({
+          email,
+          name,
+          timestamp: new Date().toISOString()
+        }));
+        console.log('Email cached for future visits');
+      } else {
+        console.error('Email capture failed:', result.error);
+      }
 
       // Close popup and redirect
       setShowEmailPopup(false);

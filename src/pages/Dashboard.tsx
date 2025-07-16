@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { CreateLinkRequest, Link } from '../types/database';
 import { createLink, getUserLinks } from '../lib/api';
 import { useToast, ToastContainer } from '../components/Toast';
+import ExportEmailsButton from '../components/ExportEmailsButton';
 
 const Dashboard: React.FC = () => {
   const { user } = useUser();
@@ -302,7 +303,10 @@ const Dashboard: React.FC = () => {
 
         {/* Recent Links */}
         <div className="bg-gray-900/50 border border-gray-700 rounded-2xl p-8">
-          <h2 className="text-2xl font-bold mb-6">Your Links</h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold">Your Links</h2>
+            <ExportEmailsButton />
+          </div>
 
           {loadingLinks ? (
             <div className="text-center py-12">
