@@ -7,4 +7,11 @@ services:
       - "3000:80"
     environment:
       - NODE_ENV=production
+      - DATA_DIR=/app/data
+    volumes:
+      - trackerr_data:/app/data
     restart: unless-stopped
+
+volumes:
+  trackerr_data:
+    driver: local
