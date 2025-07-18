@@ -162,8 +162,9 @@ export class LinkService {
       expiresAt: row.expires_at ? new Date(row.expires_at) : undefined,
       createdAt: new Date(row.created_at),
       updatedAt: new Date(row.updated_at),
-      totalClicks: row.total_clicks,
-      uniqueClicks: row.unique_clicks
+      totalClicks: row.total_clicks || 0,
+      uniqueClicks: row.unique_clicks || 0,
+      emailCaptures: row.email_captures || 0
     };
   }
 }

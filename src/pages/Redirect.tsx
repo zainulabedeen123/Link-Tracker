@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Link as LinkIcon, ExternalLink } from 'lucide-react';
 import EmailCollectionPopup from '../components/EmailCollectionPopup';
+import { submitEmailCapture } from '../lib/api';
 
 const Redirect: React.FC = () => {
   const { shortCode } = useParams<{ shortCode: string }>();
@@ -83,30 +84,22 @@ const Redirect: React.FC = () => {
     try {
       setSubmittingEmail(true);
 
-      // Submit email capture to backend
-      const BASE_URL = import.meta.env.PROD ? '/api' : 'http://localhost:3001/api';
       console.log('Submitting email capture:', { linkId: link.id, email, name });
 
-      const response = await fetch(`${BASE_URL}/email-capture`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          linkId: link.id,
-          shortCode: shortCode,
-          email,
-          name,
-          userAgent: navigator.userAgent,
-          referrer: document.referrer || 'direct',
-          timestamp: new Date().toISOString()
-        })
+      // Submit email capture using the API function
+      const result = await submitEmailCapture({
+        linkId: link.id,
+        shortCode: shortCode,
+        email,
+        name,
+        userAgent: navigator.userAgent,
+        referrer: document.referrer || 'direct',
+        timestamp: new Date().toISOString()
       });
 
-      const result = await response.json();
       console.log('Email capture response:', result);
 
-      if (response.ok && result.success) {
+      if (result.success) {
         // Store email in localStorage to prevent showing popup again
         const cacheKey = `email_captured_${shortCode}`;
         localStorage.setItem(cacheKey, JSON.stringify({
@@ -116,7 +109,7 @@ const Redirect: React.FC = () => {
         }));
         console.log('Email cached for future visits');
       } else {
-        console.error('Email capture failed:', result.error);
+        console.error('Email capture failed:', result.message);
       }
 
       // Close popup and redirect

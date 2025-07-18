@@ -12,6 +12,7 @@ export interface Link {
   updatedAt: Date;
   totalClicks: number;
   uniqueClicks: number;
+  emailCaptures: number;
 }
 
 export interface Click {
