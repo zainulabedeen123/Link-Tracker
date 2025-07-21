@@ -93,11 +93,11 @@ export class TrackingService {
     try {
       const today = new Date().toISOString().split('T')[0];
       const existing = await db.get(`
-        SELECT id FROM clicks 
-        WHERE link_id = ? AND ip_address = ? AND DATE(timestamp) = ?
+        SELECT id FROM clicks
+        WHERE link_id = $1 AND ip_address = $2 AND DATE(timestamp) = $3
         LIMIT 1
       `, [linkId, ip, today]);
-      
+
       return !existing;
     } catch (error) {
       console.error('Error checking unique click:', error);
@@ -124,17 +124,16 @@ export class TrackingService {
       const isUnique = await this.isUniqueClick(linkId, ip, sessionId);
       
       // Create click record
-      const clickId = uuidv4();
       const timestamp = new Date().toISOString();
-      
+
       await db.run(`
         INSERT INTO clicks (
-          id, link_id, ip_address, user_agent, referer,
+          link_id, ip_address, user_agent, referer,
           country, region, city, latitude, longitude, timezone,
           device, browser, os, is_mobile, is_bot, session_id, timestamp
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
       `, [
-        clickId, linkId, ip, userAgent, referer,
+        linkId, ip, userAgent, referer,
         locationData.country, locationData.region, locationData.city,
         locationData.latitude, locationData.longitude, locationData.timezone,
         deviceInfo.device, deviceInfo.browser, deviceInfo.os,
@@ -154,7 +153,7 @@ export class TrackingService {
   // Get analytics for a link
   async getLinkAnalytics(linkId: string) {
     try {
-      const clicks = await db.all('SELECT * FROM clicks WHERE link_id = ?', [linkId]);
+      const clicks = await db.all('SELECT * FROM clicks WHERE link_id = $1', [linkId]);
       
       // Group by country
       const clicksByCountry: Record<string, number> = {};

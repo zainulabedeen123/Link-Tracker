@@ -48,43 +48,25 @@ export class LinkService {
         } while (await this.getLinkByShortCode(shortCode));
       }
 
-      // Create link object
-      const linkId = uuidv4();
-      const now = new Date().toISOString();
-
-      const link: Partial<Link> = {
-        id: linkId,
-        userId,
-        originalUrl: request.originalUrl,
-        shortCode,
-        customAlias: request.customAlias,
-        title: request.title,
-        description: request.description,
-        isActive: true,
-        expiresAt: request.expiresAt,
-        createdAt: new Date(now),
-        updatedAt: new Date(now),
-        totalClicks: 0,
-        uniqueClicks: 0
-      };
-
-      // Insert into database
-      await db.run(`
+      // Insert into database and get the generated ID
+      const result = await db.query(`
         INSERT INTO links (
-          id, user_id, original_url, short_code, custom_alias, 
-          title, description, is_active, expires_at, created_at, updated_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          user_id, original_url, short_code, custom_alias,
+          title, description, is_active, expires_at
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        RETURNING *
       `, [
-        linkId, userId, request.originalUrl, shortCode, request.customAlias,
-        request.title, request.description, 1, 
-        request.expiresAt?.toISOString(), now, now
+        userId, request.originalUrl, shortCode, request.customAlias,
+        request.title, request.description, true,
+        request.expiresAt?.toISOString()
       ]);
 
-      const createdLink = await this.getLinkById(linkId);
-      
+      const createdLink = result.rows[0];
+      const link = this.mapRowToLink(createdLink);
+
       return {
         success: true,
-        link: createdLink!,
+        link: link,
         shortUrl: `https://trackerr.pro/${shortCode}`
       };
     } catch (error) {
@@ -96,7 +78,7 @@ export class LinkService {
   // Get link by ID
   async getLinkById(id: string): Promise<Link | null> {
     try {
-      const row = await db.get('SELECT * FROM links WHERE id = ?', [id]);
+      const row = await db.get('SELECT * FROM links WHERE id = $1', [id]);
       return row ? this.mapRowToLink(row) : null;
     } catch (error) {
       console.error('Error getting link by ID:', error);
@@ -107,7 +89,7 @@ export class LinkService {
   // Get link by short code
   async getLinkByShortCode(shortCode: string): Promise<Link | null> {
     try {
-      const row = await db.get('SELECT * FROM links WHERE short_code = ? AND is_active = 1', [shortCode]);
+      const row = await db.get('SELECT * FROM links WHERE short_code = $1 AND is_active = true', [shortCode]);
       return row ? this.mapRowToLink(row) : null;
     } catch (error) {
       console.error('Error getting link by short code:', error);
@@ -119,7 +101,7 @@ export class LinkService {
   async getUserLinks(userId: string): Promise<Link[]> {
     try {
       const rows = await db.all(
-        'SELECT * FROM links WHERE user_id = ? ORDER BY created_at DESC',
+        'SELECT * FROM links WHERE user_id = $1 ORDER BY created_at DESC',
         [userId]
       );
       return rows.map(row => this.mapRowToLink(row));
@@ -134,12 +116,12 @@ export class LinkService {
     try {
       if (isUnique) {
         await db.run(
-          'UPDATE links SET total_clicks = total_clicks + 1, unique_clicks = unique_clicks + 1 WHERE id = ?',
+          'UPDATE links SET total_clicks = total_clicks + 1, unique_clicks = unique_clicks + 1 WHERE id = $1',
           [linkId]
         );
       } else {
         await db.run(
-          'UPDATE links SET total_clicks = total_clicks + 1 WHERE id = ?',
+          'UPDATE links SET total_clicks = total_clicks + 1 WHERE id = $1',
           [linkId]
         );
       }

@@ -1,16 +1,16 @@
 -- Links table
 CREATE TABLE IF NOT EXISTS links (
-    id TEXT PRIMARY KEY,
-    user_id TEXT NOT NULL,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id VARCHAR(255) NOT NULL,
     original_url TEXT NOT NULL,
-    short_code TEXT UNIQUE NOT NULL,
-    custom_alias TEXT,
-    title TEXT,
+    short_code VARCHAR(50) UNIQUE NOT NULL,
+    custom_alias VARCHAR(100),
+    title VARCHAR(500),
     description TEXT,
-    is_active BOOLEAN DEFAULT 1,
-    expires_at DATETIME,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    is_active BOOLEAN DEFAULT true,
+    expires_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     total_clicks INTEGER DEFAULT 0,
     unique_clicks INTEGER DEFAULT 0,
     email_captures INTEGER DEFAULT 0
@@ -18,38 +18,38 @@ CREATE TABLE IF NOT EXISTS links (
 
 -- Clicks table for detailed analytics
 CREATE TABLE IF NOT EXISTS clicks (
-    id TEXT PRIMARY KEY,
-    link_id TEXT NOT NULL,
-    ip_address TEXT,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    link_id UUID NOT NULL,
+    ip_address INET,
     user_agent TEXT,
     referer TEXT,
-    country TEXT,
-    region TEXT,
-    city TEXT,
-    latitude REAL,
-    longitude REAL,
-    timezone TEXT,
-    device TEXT,
-    browser TEXT,
-    os TEXT,
-    is_mobile BOOLEAN DEFAULT 0,
-    is_bot BOOLEAN DEFAULT 0,
-    session_id TEXT,
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (link_id) REFERENCES links (id) ON DELETE CASCADE
+    country VARCHAR(100),
+    region VARCHAR(100),
+    city VARCHAR(100),
+    latitude DECIMAL(10, 8),
+    longitude DECIMAL(11, 8),
+    timezone VARCHAR(100),
+    device VARCHAR(100),
+    browser VARCHAR(100),
+    os VARCHAR(100),
+    is_mobile BOOLEAN DEFAULT false,
+    is_bot BOOLEAN DEFAULT false,
+    session_id VARCHAR(255),
+    timestamp TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_clicks_link_id FOREIGN KEY (link_id) REFERENCES links (id) ON DELETE CASCADE
 );
 
 -- Email captures table for lead generation
 CREATE TABLE IF NOT EXISTS email_captures (
-    id TEXT PRIMARY KEY,
-    link_id TEXT NOT NULL,
-    email TEXT NOT NULL,
-    name TEXT NOT NULL,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    link_id UUID NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
     user_agent TEXT,
     referrer TEXT,
-    ip_address TEXT,
-    captured_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (link_id) REFERENCES links (id) ON DELETE CASCADE
+    ip_address INET,
+    captured_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_email_captures_link_id FOREIGN KEY (link_id) REFERENCES links (id) ON DELETE CASCADE
 );
 
 -- Indexes for better performance
@@ -62,9 +62,18 @@ CREATE INDEX IF NOT EXISTS idx_email_captures_link_id ON email_captures(link_id)
 CREATE INDEX IF NOT EXISTS idx_email_captures_email ON email_captures(email);
 CREATE INDEX IF NOT EXISTS idx_email_captures_captured_at ON email_captures(captured_at);
 
+-- Function to update updated_at timestamp
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
 -- Trigger to update updated_at timestamp
-CREATE TRIGGER IF NOT EXISTS update_links_timestamp 
-    AFTER UPDATE ON links
-    BEGIN
-        UPDATE links SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
-    END;
+DROP TRIGGER IF EXISTS update_links_timestamp ON links;
+CREATE TRIGGER update_links_timestamp
+    BEFORE UPDATE ON links
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();

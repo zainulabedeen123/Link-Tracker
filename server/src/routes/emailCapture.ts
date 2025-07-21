@@ -55,7 +55,7 @@ router.post('/', async (req: Request, res: Response) => {
     // Get link ID from short code if not provided
     let actualLinkId = linkId;
     if (!actualLinkId) {
-      const linkQuery = 'SELECT id FROM links WHERE short_code = ?';
+      const linkQuery = 'SELECT id FROM links WHERE short_code = $1';
       const linkResult = await db.get(linkQuery, [shortCode]);
 
       if (!linkResult) {
@@ -71,7 +71,7 @@ router.post('/', async (req: Request, res: Response) => {
     // Check if email already exists for this link (prevent duplicates)
     const existingQuery = `
       SELECT id FROM email_captures
-      WHERE link_id = ? AND email = ?
+      WHERE link_id = $1 AND email = $2
     `;
     const existingResult = await db.get(existingQuery, [actualLinkId, email.toLowerCase()]);
 
@@ -85,12 +85,10 @@ router.post('/', async (req: Request, res: Response) => {
     }
 
     // Insert email capture record
-    const captureId = uuidv4();
     const capturedAt = timestamp ? new Date(timestamp).toISOString() : new Date().toISOString();
 
     const insertQuery = `
       INSERT INTO email_captures (
-        id,
         link_id,
         email,
         name,
@@ -98,11 +96,11 @@ router.post('/', async (req: Request, res: Response) => {
         referrer,
         captured_at,
         ip_address
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+      RETURNING id
     `;
 
     const values = [
-      captureId,
       actualLinkId,
       email.toLowerCase().trim(),
       name.trim(),
@@ -112,14 +110,15 @@ router.post('/', async (req: Request, res: Response) => {
       req.ip || (req as any).connection?.remoteAddress || null
     ];
 
-    await db.run(insertQuery, values);
+    const insertResult = await db.query(insertQuery, values);
+    const captureId = insertResult.rows[0].id;
 
     // Update link statistics (increment email captures count)
     const updateStatsQuery = `
       UPDATE links
       SET email_captures = COALESCE(email_captures, 0) + 1,
           updated_at = CURRENT_TIMESTAMP
-      WHERE id = ?
+      WHERE id = $1
     `;
     await db.run(updateStatsQuery, [actualLinkId]);
 
@@ -159,15 +158,15 @@ router.get('/:linkId', async (req: Request, res: Response) => {
         captured_at,
         ip_address
       FROM email_captures
-      WHERE link_id = ?
+      WHERE link_id = $1
       ORDER BY captured_at DESC
-      LIMIT ? OFFSET ?
+      LIMIT $2 OFFSET $3
     `;
 
     const countQuery = `
       SELECT COUNT(*) as total
       FROM email_captures
-      WHERE link_id = ?
+      WHERE link_id = $1
     `;
 
     const [dataResult, countResult] = await Promise.all([
@@ -224,16 +223,16 @@ router.get('/user/:userId', async (req: Request, res: Response) => {
         l.original_url
       FROM email_captures ec
       JOIN links l ON ec.link_id = l.id
-      WHERE l.user_id = ?
+      WHERE l.user_id = $1
       ORDER BY ec.captured_at DESC
-      LIMIT ? OFFSET ?
+      LIMIT $2 OFFSET $3
     `;
 
     const countQuery = `
       SELECT COUNT(*) as total
       FROM email_captures ec
       JOIN links l ON ec.link_id = l.id
-      WHERE l.user_id = ?
+      WHERE l.user_id = $1
     `;
 
     const [dataResult, countResult] = await Promise.all([
