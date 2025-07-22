@@ -135,61 +135,61 @@ const Analytics: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Overview Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <Card className="bg-gradient-to-br from-blue-900/50 to-blue-800/30 border border-blue-700/50 shadow-lg hover:shadow-xl transition-all duration-300">
+          <Card className="bg-gray-900/50 border border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-blue-200 text-sm font-medium">Total Clicks</p>
+                  <p className="text-gray-400 text-sm font-medium">Total Clicks</p>
                   <p className="text-3xl font-bold text-white mt-2">{analytics.totalClicks.toLocaleString()}</p>
-                  <p className="text-blue-300 text-xs mt-1">All time</p>
+                  <p className="text-gray-500 text-xs mt-1">All time</p>
                 </div>
-                <div className="p-4 bg-blue-500/30 rounded-xl">
-                  <MousePointer className="w-7 h-7 text-blue-300" />
+                <div className="p-4 bg-blue-500/20 rounded-xl">
+                  <MousePointer className="w-7 h-7 text-blue-400" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-green-900/50 to-green-800/30 border border-green-700/50 shadow-lg hover:shadow-xl transition-all duration-300">
+          <Card className="bg-gray-900/50 border border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-green-200 text-sm font-medium">Unique Visitors</p>
+                  <p className="text-gray-400 text-sm font-medium">Unique Visitors</p>
                   <p className="text-3xl font-bold text-white mt-2">{analytics.uniqueClicks.toLocaleString()}</p>
-                  <p className="text-green-300 text-xs mt-1">Unique IPs</p>
+                  <p className="text-gray-500 text-xs mt-1">Unique IPs</p>
                 </div>
-                <div className="p-4 bg-green-500/30 rounded-xl">
-                  <Users className="w-7 h-7 text-green-300" />
+                <div className="p-4 bg-green-500/20 rounded-xl">
+                  <Users className="w-7 h-7 text-green-400" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-purple-900/50 to-purple-800/30 border border-purple-700/50 shadow-lg hover:shadow-xl transition-all duration-300">
+          <Card className="bg-gray-900/50 border border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-purple-200 text-sm font-medium">Countries</p>
+                  <p className="text-gray-400 text-sm font-medium">Countries</p>
                   <p className="text-3xl font-bold text-white mt-2">{Object.keys(analytics.clicksByCountry).length}</p>
-                  <p className="text-purple-300 text-xs mt-1">Global reach</p>
+                  <p className="text-gray-500 text-xs mt-1">Global reach</p>
                 </div>
-                <div className="p-4 bg-purple-500/30 rounded-xl">
-                  <Globe className="w-7 h-7 text-purple-300" />
+                <div className="p-4 bg-purple-500/20 rounded-xl">
+                  <Globe className="w-7 h-7 text-purple-400" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-orange-900/50 to-orange-800/30 border border-orange-700/50 shadow-lg hover:shadow-xl transition-all duration-300">
+          <Card className="bg-gray-900/50 border border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-orange-200 text-sm font-medium">Email Captures</p>
+                  <p className="text-gray-400 text-sm font-medium">Email Captures</p>
                   <p className="text-3xl font-bold text-white mt-2">{analytics.emailCaptures || 0}</p>
-                  <p className="text-orange-300 text-xs mt-1">Lead generation</p>
+                  <p className="text-gray-500 text-xs mt-1">Lead generation</p>
                 </div>
-                <div className="p-4 bg-orange-500/30 rounded-xl">
-                  <Mail className="w-7 h-7 text-orange-300" />
+                <div className="p-4 bg-orange-500/20 rounded-xl">
+                  <Mail className="w-7 h-7 text-orange-400" />
                 </div>
               </div>
             </CardContent>

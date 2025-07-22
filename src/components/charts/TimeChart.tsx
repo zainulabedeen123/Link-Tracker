@@ -39,7 +39,7 @@ const TimeChart: React.FC<TimeChartProps> = ({ data, totalClicks }) => {
               <div key={date} className="flex-1 flex flex-col items-center">
                 <div className="relative w-full flex items-end justify-center h-40">
                   <div
-                    className="w-full bg-blue-500 rounded-t-lg transition-all duration-1000 ease-out hover:bg-blue-400 cursor-pointer group"
+                    className="w-full bg-gray-600 rounded-t-lg transition-all duration-1000 ease-out hover:bg-gray-500 cursor-pointer group"
                     style={{ height: `${height}%` }}
                   >
                     {/* Tooltip */}
@@ -61,63 +61,63 @@ const TimeChart: React.FC<TimeChartProps> = ({ data, totalClicks }) => {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-blue-500/20 border border-blue-500/30 rounded-xl p-4">
+        <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <Calendar className="w-4 h-4 text-blue-400" />
-            <span className="text-sm font-semibold text-blue-300">Today</span>
+            <span className="text-sm font-semibold text-gray-300">Today</span>
           </div>
-          <div className="text-xl font-bold text-blue-400">
+          <div className="text-xl font-bold text-white">
             {data[new Date().toISOString().split('T')[0]] || 0}
           </div>
-          <div className="text-xs text-blue-300">clicks</div>
+          <div className="text-xs text-gray-400">clicks</div>
         </div>
 
-        <div className="bg-green-500/20 border border-green-500/30 rounded-xl p-4">
+        <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <TrendingUp className="w-4 h-4 text-green-400" />
-            <span className="text-sm font-semibold text-green-300">Peak Day</span>
+            <span className="text-sm font-semibold text-gray-300">Peak Day</span>
           </div>
-          <div className="text-xl font-bold text-green-400">
+          <div className="text-xl font-bold text-white">
             {Math.max(...Object.values(data))}
           </div>
-          <div className="text-xs text-green-300">clicks</div>
+          <div className="text-xs text-gray-400">clicks</div>
         </div>
 
-        <div className="bg-purple-500/20 border border-purple-500/30 rounded-xl p-4">
+        <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <Activity className="w-4 h-4 text-purple-400" />
-            <span className="text-sm font-semibold text-purple-300">Average</span>
+            <span className="text-sm font-semibold text-gray-300">Average</span>
           </div>
-          <div className="text-xl font-bold text-purple-400">
+          <div className="text-xl font-bold text-white">
             {Object.keys(data).length > 0 ? Math.round(totalClicks / Object.keys(data).length) : 0}
           </div>
-          <div className="text-xs text-purple-300">per day</div>
+          <div className="text-xs text-gray-400">per day</div>
         </div>
 
-        <div className="bg-orange-500/20 border border-orange-500/30 rounded-xl p-4">
+        <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <Clock className="w-4 h-4 text-orange-400" />
-            <span className="text-sm font-semibold text-orange-300">Active Days</span>
+            <span className="text-sm font-semibold text-gray-300">Active Days</span>
           </div>
-          <div className="text-xl font-bold text-orange-400">
+          <div className="text-xl font-bold text-white">
             {Object.values(data).filter(clicks => clicks > 0).length}
           </div>
-          <div className="text-xs text-orange-300">days</div>
+          <div className="text-xs text-gray-400">days</div>
         </div>
       </div>
 
       {/* Recent Activity */}
       <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
-        <h5 className="font-semibold mb-4 flex items-center gap-2">
-          <Clock className="w-4 h-4 text-blue-400" />
+        <h5 className="font-semibold mb-4 flex items-center gap-2 text-white">
+          <Clock className="w-4 h-4 text-gray-400" />
           Recent Activity
         </h5>
-        
+
         <div className="space-y-2">
           {sortedDates.slice(-5).reverse().map(([date, clicks]) => (
             <div key={date} className="flex items-center justify-between py-2 px-3 bg-gray-900/50 rounded-lg">
               <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
                 <span className="text-sm text-gray-300">{formatDate(date)}</span>
               </div>
               <span className="text-sm font-semibold text-white">{clicks} clicks</span>
