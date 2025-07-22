@@ -49,6 +49,16 @@ CREATE TABLE IF NOT EXISTS email_captures (
     user_agent TEXT,
     referrer TEXT,
     ip_address INET,
+    country VARCHAR(100),
+    region VARCHAR(100),
+    city VARCHAR(100),
+    latitude DECIMAL(10, 8),
+    longitude DECIMAL(11, 8),
+    timezone VARCHAR(100),
+    device VARCHAR(100),
+    browser VARCHAR(100),
+    os VARCHAR(100),
+    is_mobile BOOLEAN DEFAULT false,
     captured_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_email_captures_link_id FOREIGN KEY (link_id) REFERENCES links (id) ON DELETE CASCADE
 );

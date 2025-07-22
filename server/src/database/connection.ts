@@ -89,6 +89,7 @@ class Database {
 
       // Add new columns to existing tables
       await this.addNewColumns();
+      await this.addEmailCaptureColumns();
 
       console.log('✅ PostgreSQL database schema initialized successfully');
     } catch (error) {
@@ -147,6 +148,16 @@ class Database {
         user_agent TEXT,
         referrer TEXT,
         ip_address INET,
+        country VARCHAR(100),
+        region VARCHAR(100),
+        city VARCHAR(100),
+        latitude DECIMAL(10, 8),
+        longitude DECIMAL(11, 8),
+        timezone VARCHAR(100),
+        device VARCHAR(100),
+        browser VARCHAR(100),
+        os VARCHAR(100),
+        is_mobile BOOLEAN DEFAULT false,
         captured_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         CONSTRAINT fk_email_captures_link_id FOREIGN KEY (link_id) REFERENCES links (id) ON DELETE CASCADE
       )`
@@ -226,6 +237,32 @@ class Database {
       const errorMessage = error instanceof Error ? error.message : String(error);
       if (!errorMessage.includes('already exists')) {
         console.warn('Column addition warning:', errorMessage);
+      }
+    }
+  }
+
+  private async addEmailCaptureColumns(): Promise<void> {
+    const newColumns = [
+      'ALTER TABLE email_captures ADD COLUMN IF NOT EXISTS country VARCHAR(100)',
+      'ALTER TABLE email_captures ADD COLUMN IF NOT EXISTS region VARCHAR(100)',
+      'ALTER TABLE email_captures ADD COLUMN IF NOT EXISTS city VARCHAR(100)',
+      'ALTER TABLE email_captures ADD COLUMN IF NOT EXISTS latitude DECIMAL(10, 8)',
+      'ALTER TABLE email_captures ADD COLUMN IF NOT EXISTS longitude DECIMAL(11, 8)',
+      'ALTER TABLE email_captures ADD COLUMN IF NOT EXISTS timezone VARCHAR(100)',
+      'ALTER TABLE email_captures ADD COLUMN IF NOT EXISTS device VARCHAR(100)',
+      'ALTER TABLE email_captures ADD COLUMN IF NOT EXISTS browser VARCHAR(100)',
+      'ALTER TABLE email_captures ADD COLUMN IF NOT EXISTS os VARCHAR(100)',
+      'ALTER TABLE email_captures ADD COLUMN IF NOT EXISTS is_mobile BOOLEAN DEFAULT false'
+    ];
+
+    for (const column of newColumns) {
+      try {
+        await this.query(column);
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        if (!errorMessage.includes('already exists')) {
+          console.warn('Column addition warning:', errorMessage);
+        }
       }
     }
   }

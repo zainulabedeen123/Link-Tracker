@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { db } from '../database/connection';
 import { v4 as uuidv4 } from 'uuid';
+import { trackingService } from '../services/trackingService';
 
 const router = Router();
 
@@ -86,6 +87,11 @@ router.post('/', async (req: Request, res: Response) => {
 
     // Insert email capture record
     const capturedAt = timestamp ? new Date(timestamp).toISOString() : new Date().toISOString();
+    const ipAddress = req.ip || (req as any).connection?.remoteAddress || '127.0.0.1';
+
+    // Get location and device info
+    const locationData = await trackingService.getLocationFromIP(ipAddress);
+    const deviceInfo = trackingService.parseUserAgent(userAgent || '');
 
     const insertQuery = `
       INSERT INTO email_captures (
@@ -95,8 +101,18 @@ router.post('/', async (req: Request, res: Response) => {
         user_agent,
         referrer,
         captured_at,
-        ip_address
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+        ip_address,
+        country,
+        region,
+        city,
+        latitude,
+        longitude,
+        timezone,
+        device,
+        browser,
+        os,
+        is_mobile
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
       RETURNING id
     `;
 
@@ -107,7 +123,17 @@ router.post('/', async (req: Request, res: Response) => {
       userAgent || null,
       referrer || null,
       capturedAt,
-      req.ip || (req as any).connection?.remoteAddress || null
+      ipAddress,
+      locationData?.country || null,
+      locationData?.region || null,
+      locationData?.city || null,
+      locationData?.latitude || null,
+      locationData?.longitude || null,
+      locationData?.timezone || null,
+      deviceInfo.device || null,
+      deviceInfo.browser || null,
+      deviceInfo.os || null,
+      deviceInfo.isMobile || false
     ];
 
     const insertResult = await db.query(insertQuery, values);
@@ -156,7 +182,17 @@ router.get('/:linkId', async (req: Request, res: Response) => {
         user_agent,
         referrer,
         captured_at,
-        ip_address
+        ip_address,
+        country,
+        region,
+        city,
+        latitude,
+        longitude,
+        timezone,
+        device,
+        browser,
+        os,
+        is_mobile
       FROM email_captures
       WHERE link_id = $1
       ORDER BY captured_at DESC
@@ -218,6 +254,16 @@ router.get('/user/:userId', async (req: Request, res: Response) => {
         ec.referrer,
         ec.captured_at,
         ec.ip_address,
+        ec.country,
+        ec.region,
+        ec.city,
+        ec.latitude,
+        ec.longitude,
+        ec.timezone,
+        ec.device,
+        ec.browser,
+        ec.os,
+        ec.is_mobile,
         l.title as link_title,
         l.short_code,
         l.original_url

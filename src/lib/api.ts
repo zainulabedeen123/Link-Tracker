@@ -172,6 +172,16 @@ export interface EmailCapture {
   referrer?: string;
   capturedAt: string;
   ipAddress?: string;
+  country?: string;
+  region?: string;
+  city?: string;
+  latitude?: number;
+  longitude?: number;
+  timezone?: string;
+  device?: string;
+  browser?: string;
+  os?: string;
+  isMobile?: boolean;
 }
 
 export const submitEmailCapture = async (data: EmailCaptureData): Promise<{ success: boolean; message?: string; duplicate?: boolean }> => {
