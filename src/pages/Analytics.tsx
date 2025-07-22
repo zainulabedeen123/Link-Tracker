@@ -9,7 +9,6 @@ import {
 import { Mail } from 'lucide-react';
 import { getLinkAnalytics, getLinkById } from '../lib/api';
 import { Link } from '../types/database';
-import CountryChart from '../components/charts/CountryChart';
 import DeviceChart from '../components/charts/DeviceChart';
 import BrowserChart from '../components/charts/BrowserChart';
 import TimeChart from '../components/charts/TimeChart';
@@ -193,21 +192,6 @@ const Analytics: React.FC = () => {
                   <Mail className="w-7 h-7 text-orange-300" />
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Top Countries */}
-        <div className="mb-12">
-          <Card className="bg-gray-900/50 border border-gray-700 shadow-lg">
-            <CardHeader className="border-b border-gray-700">
-              <CardTitle className="flex items-center gap-2 text-white text-xl font-semibold">
-                <Globe className="w-6 h-6 text-purple-400" />
-                Top Countries
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6">
-              <CountryChart data={analytics.clicksByCountry} totalClicks={analytics.totalClicks} />
             </CardContent>
           </Card>
         </div>
