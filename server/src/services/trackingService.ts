@@ -153,7 +153,10 @@ export class TrackingService {
   // Get analytics for a link
   async getLinkAnalytics(linkId: string) {
     try {
-      const clicks = await db.all('SELECT * FROM clicks WHERE link_id = $1', [linkId]);
+      const [clicks, emailCapturesResult] = await Promise.all([
+        db.all('SELECT * FROM clicks WHERE link_id = $1', [linkId]),
+        db.get('SELECT COUNT(*) as count FROM email_captures WHERE link_id = $1', [linkId])
+      ]);
       
       // Group by country
       const clicksByCountry: Record<string, number> = {};
@@ -205,6 +208,7 @@ export class TrackingService {
         linkId,
         totalClicks: clicks.length,
         uniqueClicks: new Set(clicks.map(c => c.ip_address)).size,
+        emailCaptures: emailCapturesResult?.count || 0,
         clicksByCountry,
         clicksByDevice,
         clicksByBrowser,

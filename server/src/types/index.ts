@@ -57,6 +57,7 @@ export interface LinkAnalytics {
   linkId: string;
   totalClicks: number;
   uniqueClicks: number;
+  emailCaptures: number;
   clicksByCountry: Record<string, number>;
   clicksByDevice: Record<string, number>;
   clicksByBrowser: Record<string, number>;
