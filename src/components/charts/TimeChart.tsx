@@ -29,33 +29,95 @@ const TimeChart: React.FC<TimeChartProps> = ({ data, totalClicks }) => {
 
   return (
     <div className="space-y-6">
-      {/* Bar Chart */}
+      {/* Line Chart */}
       <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
-        <div className="flex items-end justify-between h-48 gap-2">
-          {sortedDates.map(([date, clicks]) => {
-            const height = maxClicks > 0 ? (clicks / maxClicks) * 100 : 0;
+        <div className="relative h-48">
+          {/* Chart Area */}
+          <div className="relative w-full h-40">
+            {/* Grid Lines */}
+            <div className="absolute inset-0">
+              {[0, 25, 50, 75, 100].map((percent) => (
+                <div
+                  key={percent}
+                  className="absolute w-full border-t border-gray-700/50"
+                  style={{ top: `${100 - percent}%` }}
+                />
+              ))}
+            </div>
 
-            return (
-              <div key={date} className="flex-1 flex flex-col items-center">
-                <div className="relative w-full flex items-end justify-center h-40">
-                  <div
-                    className="w-full bg-gray-600 rounded-t-lg transition-all duration-1000 ease-out hover:bg-gray-500 cursor-pointer group"
-                    style={{ height: `${height}%` }}
-                  >
-                    {/* Tooltip */}
-                    <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                      {clicks} clicks
-                    </div>
-                  </div>
-                </div>
+            {/* Y-axis labels */}
+            <div className="absolute -left-8 inset-y-0 flex flex-col justify-between text-xs text-gray-400">
+              <span>{maxClicks}</span>
+              <span>{Math.round(maxClicks * 0.75)}</span>
+              <span>{Math.round(maxClicks * 0.5)}</span>
+              <span>{Math.round(maxClicks * 0.25)}</span>
+              <span>0</span>
+            </div>
 
-                <div className="mt-2 text-center">
-                  <div className="text-xs font-semibold text-white">{getDayName(date)}</div>
-                  <div className="text-xs text-gray-400">{formatDate(date)}</div>
-                </div>
+            {/* Line Chart SVG */}
+            <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+              {/* Line Path */}
+              <path
+                d={sortedDates.map(([date, clicks], index) => {
+                  const x = (index / (sortedDates.length - 1)) * 100;
+                  const y = 100 - (maxClicks > 0 ? (clicks / maxClicks) * 100 : 0);
+                  return `${index === 0 ? 'M' : 'L'} ${x} ${y}`;
+                }).join(' ')}
+                fill="none"
+                stroke="rgb(34, 197, 94)"
+                strokeWidth="0.5"
+                className="drop-shadow-sm"
+              />
+
+              {/* Area Fill */}
+              <path
+                d={[
+                  ...sortedDates.map(([date, clicks], index) => {
+                    const x = (index / (sortedDates.length - 1)) * 100;
+                    const y = 100 - (maxClicks > 0 ? (clicks / maxClicks) * 100 : 0);
+                    return `${index === 0 ? 'M' : 'L'} ${x} ${y}`;
+                  }),
+                  `L 100 100 L 0 100 Z`
+                ].join(' ')}
+                fill="url(#gradient)"
+                opacity="0.2"
+              />
+
+              {/* Data Points */}
+              {sortedDates.map(([date, clicks], index) => {
+                const x = (index / (sortedDates.length - 1)) * 100;
+                const y = 100 - (maxClicks > 0 ? (clicks / maxClicks) * 100 : 0);
+                return (
+                  <circle
+                    key={date}
+                    cx={x}
+                    cy={y}
+                    r="1"
+                    fill="rgb(34, 197, 94)"
+                    className="hover:r-2 transition-all cursor-pointer"
+                  />
+                );
+              })}
+
+              {/* Gradient Definition */}
+              <defs>
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="rgb(34, 197, 94)" stopOpacity="0.3" />
+                  <stop offset="100%" stopColor="rgb(34, 197, 94)" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+
+          {/* X-axis labels */}
+          <div className="flex justify-between mt-4 text-xs text-gray-400">
+            {sortedDates.map(([date]) => (
+              <div key={date} className="text-center">
+                <div className="font-semibold">{getDayName(date)}</div>
+                <div>{formatDate(date)}</div>
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
       </div>
 
