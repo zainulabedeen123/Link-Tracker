@@ -124,12 +124,7 @@ router.get('/by-code/:shortCode', async (req: Request, res: Response) => {
 
     res.json({
       success: true,
-      link: {
-        id: link.id,
-        originalUrl: link.originalUrl,
-        title: link.title,
-        shortCode: link.shortCode
-      }
+      link: link // Return the full link object with all fields including emailCollectionEnabled
     });
   } catch (error) {
     console.error('Error getting link by short code:', error);

@@ -48,10 +48,20 @@ router.get('/:shortCode', async (req: Request, res: Response) => {
     // Return link data for client-side redirect (to ensure tracking completes)
     res.json({
       success: true,
-      originalUrl: link.originalUrl,
-      title: link.title,
-      shortCode: link.shortCode,
-      linkId: link.id
+      link: {
+        id: link.id,
+        originalUrl: link.originalUrl,
+        title: link.title,
+        shortCode: link.shortCode,
+        emailCollectionEnabled: link.emailCollectionEnabled,
+        userId: link.userId,
+        isActive: link.isActive,
+        createdAt: link.createdAt,
+        updatedAt: link.updatedAt,
+        totalClicks: link.totalClicks,
+        uniqueClicks: link.uniqueClicks,
+        emailCaptures: link.emailCaptures
+      }
     });
 
   } catch (error) {
