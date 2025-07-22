@@ -7,6 +7,7 @@ export interface Link {
   title?: string;
   description?: string;
   isActive: boolean;
+  emailCollectionEnabled: boolean;
   expiresAt?: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -41,6 +42,7 @@ export interface CreateLinkRequest {
   customAlias?: string;
   title?: string;
   description?: string;
+  emailCollectionEnabled?: boolean;
   expiresAt?: Date;
 }
 

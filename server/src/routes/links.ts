@@ -7,7 +7,7 @@ const router = Router();
 // Create a new link
 router.post('/', async (req: Request, res: Response) => {
   try {
-    const { originalUrl, customAlias, title, description, expiresAt } = req.body;
+    const { originalUrl, customAlias, title, description, emailCollectionEnabled, expiresAt } = req.body;
     const userId = req.headers['x-user-id'] as string;
 
     if (!userId) {
@@ -23,6 +23,7 @@ router.post('/', async (req: Request, res: Response) => {
       customAlias,
       title,
       description,
+      emailCollectionEnabled,
       expiresAt: expiresAt ? new Date(expiresAt) : undefined
     }, userId);
 

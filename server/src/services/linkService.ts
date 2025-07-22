@@ -52,12 +52,13 @@ export class LinkService {
       const result = await db.query(`
         INSERT INTO links (
           user_id, original_url, short_code, custom_alias,
-          title, description, is_active, expires_at
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+          title, description, is_active, email_collection_enabled, expires_at
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
         RETURNING *
       `, [
         userId, request.originalUrl, shortCode, request.customAlias,
         request.title, request.description, true,
+        request.emailCollectionEnabled || false,
         request.expiresAt?.toISOString()
       ]);
 
@@ -141,6 +142,7 @@ export class LinkService {
       title: row.title,
       description: row.description,
       isActive: Boolean(row.is_active),
+      emailCollectionEnabled: Boolean(row.email_collection_enabled),
       expiresAt: row.expires_at ? new Date(row.expires_at) : undefined,
       createdAt: new Date(row.created_at),
       updatedAt: new Date(row.updated_at),

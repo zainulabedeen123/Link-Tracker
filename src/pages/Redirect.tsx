@@ -52,6 +52,15 @@ const Redirect: React.FC = () => {
 
         setLoading(false);
 
+        // Check if email collection is enabled for this link
+        if (!data.link.emailCollectionEnabled) {
+          console.log('Email collection not enabled for this link, redirecting directly');
+          setTimeout(() => {
+            window.location.href = data.link.originalUrl;
+          }, 1000);
+          return;
+        }
+
         // Check if email was already captured for this link
         const cacheKey = `email_captured_${shortCode}`;
         const cachedEmail = localStorage.getItem(cacheKey);

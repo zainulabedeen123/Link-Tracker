@@ -87,6 +87,9 @@ class Database {
       // Create functions and triggers
       await this.createFunctionsAndTriggers();
 
+      // Add new columns to existing tables
+      await this.addNewColumns();
+
       console.log('✅ PostgreSQL database schema initialized successfully');
     } catch (error) {
       console.error('❌ Error initializing database:', error);
@@ -105,6 +108,7 @@ class Database {
         title VARCHAR(500),
         description TEXT,
         is_active BOOLEAN DEFAULT true,
+        email_collection_enabled BOOLEAN DEFAULT false,
         expires_at TIMESTAMP WITH TIME ZONE,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -208,6 +212,21 @@ class Database {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       console.warn('Function/Trigger creation warning:', errorMessage);
+    }
+  }
+
+  private async addNewColumns(): Promise<void> {
+    try {
+      // Add email_collection_enabled column if it doesn't exist
+      await this.query(`
+        ALTER TABLE links
+        ADD COLUMN IF NOT EXISTS email_collection_enabled BOOLEAN DEFAULT false
+      `);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      if (!errorMessage.includes('already exists')) {
+        console.warn('Column addition warning:', errorMessage);
+      }
     }
   }
 }

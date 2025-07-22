@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS links (
     title VARCHAR(500),
     description TEXT,
     is_active BOOLEAN DEFAULT true,
+    email_collection_enabled BOOLEAN DEFAULT false,
     expires_at TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,

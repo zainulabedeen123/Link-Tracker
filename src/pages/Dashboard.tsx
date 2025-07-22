@@ -16,6 +16,7 @@ const Dashboard: React.FC = () => {
   const [originalUrl, setOriginalUrl] = useState('');
   const [customAlias, setCustomAlias] = useState('');
   const [title, setTitle] = useState('');
+  const [emailCollectionEnabled, setEmailCollectionEnabled] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [createdLink, setCreatedLink] = useState<Link | null>(null);
   const [links, setLinks] = useState<Link[]>([]);
@@ -87,7 +88,8 @@ const Dashboard: React.FC = () => {
       const request: CreateLinkRequest = {
         originalUrl,
         customAlias: customAlias || undefined,
-        title: title || undefined
+        title: title || undefined,
+        emailCollectionEnabled
       };
 
       console.log('Creating link with request:', request);
@@ -103,6 +105,7 @@ const Dashboard: React.FC = () => {
         setOriginalUrl('');
         setCustomAlias('');
         setTitle('');
+        setEmailCollectionEnabled(false);
       } else {
         console.error('Create link failed:', response.error);
         error(response.error || 'Failed to create link');
@@ -291,6 +294,28 @@ const Dashboard: React.FC = () => {
               <p className="text-gray-500 text-xs mt-1">Leave empty for auto-generated short code</p>
             </div>
 
+            <div className="bg-gray-800/50 border border-gray-600 rounded-lg p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
+                    📧 Email Collection
+                  </label>
+                  <p className="text-gray-500 text-xs">
+                    Show a popup to collect visitor emails before redirecting
+                  </p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={emailCollectionEnabled}
+                    onChange={(e) => setEmailCollectionEnabled(e.target.checked)}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
+            </div>
+
             <button
               type="submit"
               disabled={isLoading}
@@ -371,6 +396,18 @@ const Dashboard: React.FC = () => {
                           <span>{link.totalClicks} clicks</span>
                           <span>•</span>
                           <span>{link.uniqueClicks} unique</span>
+                          {link.emailCaptures > 0 && (
+                            <>
+                              <span>•</span>
+                              <span>{link.emailCaptures} emails</span>
+                            </>
+                          )}
+                          {link.emailCollectionEnabled && (
+                            <>
+                              <span>•</span>
+                              <span className="text-green-400">📧 Email Collection ON</span>
+                            </>
+                          )}
                         </div>
                       </div>
                     </div>
